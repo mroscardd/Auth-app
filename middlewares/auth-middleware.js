@@ -23,6 +23,7 @@ const autenticar = (req, res, next) => {
 const admin = (req, res,next) => {
     const userInfo = req.user
     if (!userInfo || userInfo.role !== 'admin') {
+        console.log(userInfo, userInfo.role )
         return res.status(403).json({message:"you can't access", admin, userInfo})
     }
 

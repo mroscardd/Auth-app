@@ -2,14 +2,15 @@ const express = require('express')
 const { MongoClient } = require('mongodb')
 const router = express.Router()
 const bcrypt = require('bcrypt')
+const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
-const jwtSetret = process.env.JWTSECRET
-const { admin, autenticar } = require('../middleware')
+const jwtSecret = process.env.JWTSECRET
+const { admin, autenticar } = require('../middlewares/auth-middleware')
 
 
-const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:27017`
+const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:${process.env.MONGO_PORT}`
 const client = new MongoClient(url)
-const dbName = 'users'
+const dbName = 'usersdb'
 
 router.get('/', (req, res) => {
     return res.status(200).json({message:"prueba"})
@@ -22,7 +23,7 @@ router.post('/register', async(req, res) => {
 
         const db = client.db(dbName)
 
-        const collection = db.collection('usersdb')
+        const collection = db.collection('users')
         console.log('¡Conectado con éxito a MongoDB en Docker!');
 
         const existingusername = await collection.findOne({username})
@@ -45,9 +46,9 @@ router.post('/register', async(req, res) => {
             email, 
             role: "user"
         })
-        role = await collection.findOne({username}).role
+        const { _id, role } = await collection.findOne({username})
 
-        const token = jwt.sign({username, email, role}, jwtSetret)
+        const token = jwt.sign({_id, username, email, role}, jwtSecret)
 
         
         res.status(201).json({message: "correctamente creado", token})
@@ -66,8 +67,8 @@ router.post('/login', async(req, res) => {
 
         const db = client.db(dbName)
 
-        const collection = db.collection('usersdb')
-        console.log('¡Conectado con éxito a MongoDB en Docker!');
+        const collection = db.collection('users')
+        console.log('Conectado con éxito a MongoDB');
 
         const { username, password } = req.body
         const existinguser= await collection.findOne({username})
@@ -83,7 +84,7 @@ router.post('/login', async(req, res) => {
         if (isMatch ) {
             const email = existinguser.email
             const role = existinguser.role
-            const token = jwt.sign({username, email, role}, jwtSetret)
+            const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret)
      
             return res.status(200).json({message: "hola " + username, token})
 
@@ -104,8 +105,8 @@ router.get('/users', autenticar, admin, async(req, res) => {
     try {
         await client.connect()
         const db = client.db(dbName)
-        const collection = db.collection('usersdb')
-        console.log('¡Conectado con éxito a MongoDB en Docker!');
+        const collection = db.collection('users')
+        console.log('Conectado con éxito a MongoDB');
 
 
         const users = await collection.find().project({password: 0}).toArray()
@@ -115,6 +116,43 @@ router.get('/users', autenticar, admin, async(req, res) => {
             console.error(error)
                 return res.status(500).json({message: "error"})
         }
+})
+
+router.put('/user_role/:id', async(req, res) => {
+    try{
+        await client.connect()
+        const db = client.db(dbName)
+        const collection = db.collection('users')
+        console.log('Conectado con éxito a MongoDB');
+
+        const id = req.params.id
+        const _id = new ObjectId(id)
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID no válido" });
+        }
+
+        const user = await collection.findOne({ _id })
+
+       
+        if (!user) {
+            console.log(user)
+            return res.status(404).json({message:"User dont exist"})
+        }
+        if (user.role === "admin") {
+            return res.status(403).json({message:"You cant modify admin users"})
+        }
+        const { role } = req.body
+
+        const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after' })
+   
+        res.status(200).json({message: "Updated successfully", userUpdated})
+        
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: "Internal problem"})
+    }
 })
 
 
