@@ -22,9 +22,20 @@ const autenticar = (req, res, next) => {
 
 const admin = (req, res,next) => {
     const userInfo = req.user
-    if (!userInfo || userInfo.role !== 'admin') {
-        console.log(userInfo, userInfo.role )
-        return res.status(403).json({message:"you can't access", admin, userInfo})
+    console.log(userInfo)
+    if (userInfo && (userInfo.role === 'admin' || userInfo.role === 'superadmin')) {
+       
+        return next()  
+    }
+    return res.status(403).json({message:"you can't access", userInfo})
+
+}
+
+const superadmin = (req, res,next) => {
+    const userInfo = req.user
+    if (!userInfo || userInfo.role !== 'superadmin') {
+
+        return res.status(403).json({message:"you can't access", userInfo})
     }
 
     next()
@@ -32,4 +43,4 @@ const admin = (req, res,next) => {
     
 }
 
-module.exports = { admin, autenticar }
+module.exports = { superadmin, admin, autenticar }

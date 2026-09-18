@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWTSECRET
-const { admin, autenticar } = require('../middlewares/auth-middleware')
+const { superadmin, admin, autenticar } = require('../middlewares/auth-middleware')
 
 
 const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:${process.env.MONGO_PORT}`
@@ -118,20 +118,27 @@ router.get('/users', autenticar, admin, async(req, res) => {
         }
 })
 
-router.put('/user_role/:id', async(req, res) => {
+router.put('/user_role/:id', autenticar, admin, async(req, res) => {
+    const user_role = req.user.role
+    const user_id = req.user._id
+    const id = req.params.id
     try{
+        
+        if (id === user_id) {
+            return res.status(409).json({ message: "No puedes modificar tus permisos" })
+        }
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID no válido" })
+        }
+
         await client.connect()
         const db = client.db(dbName)
         const collection = db.collection('users')
         console.log('Conectado con éxito a MongoDB');
 
-        const id = req.params.id
+        
         const _id = new ObjectId(id)
-
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "ID no válido" });
-        }
-
         const user = await collection.findOne({ _id })
 
        
@@ -139,12 +146,14 @@ router.put('/user_role/:id', async(req, res) => {
             console.log(user)
             return res.status(404).json({message:"User dont exist"})
         }
-        if (user.role === "admin") {
+        if (user_role !== "superadmin" && user.role === "admin") {
             return res.status(403).json({message:"You cant modify admin users"})
         }
-        const { role } = req.body
 
-        const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after' })
+        const { role } = req.body
+        req.body.role = role
+
+        const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after', projection: { password: 0 } })
    
         res.status(200).json({message: "Updated successfully", userUpdated})
         
