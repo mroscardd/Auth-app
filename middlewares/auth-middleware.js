@@ -22,7 +22,7 @@ const autenticar = (req, res, next) => {
 
 const admin = (req, res,next) => {
     const userInfo = req.user
-    console.log(userInfo)
+
     if (userInfo && (userInfo.role === 'admin' || userInfo.role === 'superadmin')) {
        
         return next()  
