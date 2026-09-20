@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWTSECRET
 
-const autenticar = (req, res, next) => {
+const autenticate = (req, res, next) => {
     const bearer = req.headers.authorization
 
     try {
@@ -27,6 +27,7 @@ const admin = (req, res,next) => {
        
         return next()  
     }
+
     return res.status(403).json({message:"you can't access", userInfo})
 
 }
@@ -37,10 +38,9 @@ const superadmin = (req, res,next) => {
 
         return res.status(403).json({message:"you can't access", userInfo})
     }
-
+    
     next()
 
-    
 }
 
-module.exports = { superadmin, admin, autenticar }
+module.exports = { superadmin, admin, autenticate }

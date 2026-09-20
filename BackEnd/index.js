@@ -1,15 +1,16 @@
 const express = require('express')
-require('dotenv').config()
-const app = express()
 const jwt = require('jsonwebtoken')
-const authRoutes = require('./routes/authRoutes')
-app.use(express.json())
+require('dotenv').config()
+const cors = require('cors')
 
+const app = express()
 const PORT = process.env.PORT
 
+app.use(cors({origin: 'http://localhost:5173'}))
+app.use(express.json())
+
+const authRoutes = require('./routes/authRoutes')
 app.use('/api', authRoutes)
-
-
 
 
 app.get('/', (req, res) => {

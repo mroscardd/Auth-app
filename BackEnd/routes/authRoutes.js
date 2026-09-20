@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWTSECRET
-const { superadmin, admin, autenticar } = require('../middlewares/auth-middleware')
+const { superadmin, admin, autenticate } = require('../middlewares/auth-middleware')
 
 
 const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:${process.env.MONGO_PORT}`
@@ -30,7 +30,7 @@ router.post('/register', async(req, res) => {
         const existingemail = await collection.findOne({email})
 
         if (existingusername) {
-            return res.status(409).json({message: "Ya existe ese usuario"})
+            return res.status(409).json({message: "Ya existe el usuario"})
         }
 
         if (existingemail) {
@@ -48,15 +48,15 @@ router.post('/register', async(req, res) => {
         })
         const { _id, role } = await collection.findOne({username})
 
-        const token = jwt.sign({_id, username, email, role}, jwtSecret)
+        const token = jwt.sign({_id, username, email, role}, jwtSecret, { expiresIn: '15min' })
 
         
-        res.status(201).json({message: "correctamente creado", token})
+        res.status(201).json({message: "Registro exitoso!", token})
         
         
         } catch (error) {
             console.error(error)
-            return res.status(500).json({message: "error"})
+            return res.status(500).json({message: "Internal error"})
         }
 
 })
@@ -78,13 +78,13 @@ router.post('/login', async(req, res) => {
             return res.status(401).json({message: "Credential are not correct"})
             
         } 
-        console.log(password, existinguser.password)
+
         const isMatch = await bcrypt.compare(password, existinguser.password)
 
         if (isMatch ) {
             const email = existinguser.email
             const role = existinguser.role
-            const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret)
+            const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
      
             return res.status(200).json({message: "hola " + username, token})
 
@@ -100,8 +100,22 @@ router.post('/login', async(req, res) => {
     }
 })
 
+router.get('/logout', autenticate,  async(req, res) => {
+    try{
+        const bearer = req.headers.authorization
+        const token = bearer.split(' ')[1]
 
-router.get('/users', autenticar, admin, async(req, res) => {
+        return res.status(200).json({message: "You are logout"})
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({message: "Internal error"})
+    }
+
+})
+
+
+
+router.get('/users', autenticate, admin, async(req, res) => {
     try {
         await client.connect()
         const db = client.db(dbName)
@@ -118,7 +132,7 @@ router.get('/users', autenticar, admin, async(req, res) => {
         }
 })
 
-router.put('/user_role/:id', autenticar, admin, async(req, res) => {
+router.put('/user_role/:id', autenticate, admin, async(req, res) => {
     const user_role = req.user.role
     const user_id = req.user._id
     const id = req.params.id
