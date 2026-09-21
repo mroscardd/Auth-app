@@ -2,13 +2,13 @@ const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWTSECRET
 
 const autenticate = (req, res, next) => {
-    const bearer = req.headers.authorization
+    const token = req.cookies.token
 
     try {
-    if (!bearer) {
+    if (!token) {
         return res.status(401).json({message:"You have to loggin/register"})
     }
-    const token = bearer.split(' ')[1]
+    
     const payload = jwt.verify(token, jwtSecret)
     req.user = payload
     next()

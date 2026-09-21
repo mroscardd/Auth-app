@@ -48,10 +48,16 @@ router.post('/register', async(req, res) => {
         })
         const { _id, role } = await collection.findOne({username})
 
-        const token = jwt.sign({_id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+        const token = jwt.sign({_id, username, email, role}, jwtSecret, { expiresIn: '24h' })
 
+        res.cookie(
+            'token', token, {
+                httpOnly: true,
+                sameSite: 'strict',
+                maxAge: 24 * 60 * 60 * 1000
+            })
         
-        res.status(201).json({message: "Registro exitoso!", token})
+        res.status(201).json({message: "Registro exitoso!"})
         
         
         } catch (error) {
@@ -84,9 +90,16 @@ router.post('/login', async(req, res) => {
         if (isMatch ) {
             const email = existinguser.email
             const role = existinguser.role
-            const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
-     
-            return res.status(200).json({message: "hola " + username, token})
+            const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+            
+            res.cookie(
+                'token', token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 24 * 60 * 60 * 1000
+                })
+
+            return res.status(200).json({message: "hola " + username})
 
         } else {
            
@@ -102,8 +115,11 @@ router.post('/login', async(req, res) => {
 
 router.get('/logout', autenticate,  async(req, res) => {
     try{
-        const bearer = req.headers.authorization
-        const token = bearer.split(' ')[1]
+        const token = req.cookies.token
+        res.clearCookie('token', {
+            httpOnly: true,
+            sameSite: 'strict'
+        });
 
         return res.status(200).json({message: "You are logout"})
     } catch (error) {

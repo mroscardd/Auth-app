@@ -52,6 +52,7 @@ export function Registro() {
 
         fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)
 
@@ -64,7 +65,6 @@ export function Registro() {
             
             if (status === 201) {
                 setResponse(data.message)
-                sessionStorage.setItem('token', data.token)
                 clean()
             } else {
                 setResponse(data.message)
