@@ -1,18 +1,15 @@
 import { useState } from 'react'
 const env = import.meta.env
-import './Registro.css'
+import './Login.css'
 
-const url = `http://localhost:${env.VITE_PORT}/api/register`
+const url = `http://localhost:${env.VITE_PORT}/api/login`
 
-export function Registro() {
+export function Login() {
     const [formData, setFormData] = useState({
         username: '',
-        password: '',
-        email: ''
+        password: ''
     })
 
-    const [notValid, setNotValid] = useState(false)
-    const [passwordIssue, setPasswordIssue] = useState(false)
     const [response, setResponse] = useState('')
 
     const handleChange = (e, property) => {
@@ -21,14 +18,6 @@ export function Registro() {
     }
 
 
-    const handleOnBlur = () => {
-        const username = formData.username
-        if (username.length < 4 && username != '') {
-            setNotValid(true)
-        } else {
-            setNotValid(false)
-        }
-    }
 
     const clean = () => {
 
@@ -37,19 +26,12 @@ export function Registro() {
             password: '',
             email: ''       
         })
-        setNotValid(false)
+    
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const password = formData.password
-        if (password.length < 4) {
-            setPasswordIssue(true)
-            return
-        }
-        
-        
-
+       
         fetch(url, {
             method: 'POST',
             credentials: 'include',
@@ -63,7 +45,7 @@ export function Registro() {
         })
           .then(({ status,  data }) => {
             
-            if (status === 201) {
+            if (status === 200) {
                 setResponse(data.message)
                 clean()
             } else {
@@ -79,47 +61,34 @@ export function Registro() {
 
     return (
         <div>
-            <div className="registerContainer">
-                <form className="registerForm" onSubmit={(e) => handleSubmit(e)}>
-                    <h2>REGISTRO</h2>
+            <div className="loginContainer">
+                <form className="loginForm" onSubmit={(e) => handleSubmit(e)}>
+                    <h2>Login</h2>
                     <div className="fix">
-                        <label htmlFor="reg-name">Name</label>
+                        <label htmlFor="log-name">Name</label>
                         <input 
                             type="text"
-                            id = "reg-name"
+                            id = "log-name"
                             value={formData.username}
                             placeholder="Enter your name"
                             onChange={(e) => handleChange(e, "username")}
-                            onBlur={() => handleOnBlur()}
                             required
                         />   
-                        { notValid && <small>* El usuario debe tener más de 3 caracteres</small> }
                     </div>
+              
                     <div className="fix">
-                        <label htmlFor="reg-email">Email</label>
-                        <input 
-                            type="email"
-                            id = "reg-email"
-                            value={formData.email}
-                            placeholder="Enter your email"
-                            onChange={(e) => handleChange(e, "email")}
-                            required
-                        />
-                    </div>
-                    <div className="fix">
-                        <label htmlFor="reg-password">Password</label>
+                        <label htmlFor="log-password">Password</label>
                         <input 
                             type="password"
-                            id = "reg-password"
+                            id = "log-password"
                             value={formData.password}
                             placeholder="Enter your password"
                             onChange={(e) => handleChange(e, "password")}
                             required
                         />
-                        { passwordIssue && <small>* La contraseña debe tener más de 3 caracteres</small> }
                     </div>    
 
-                    <button type="submit">Registrarse</button>
+                    <button type="submit">Iniciar sesión</button>
                 </form>
                 <div>
                    { response != '' && <p>{ response }</p> }
