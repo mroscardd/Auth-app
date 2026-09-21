@@ -114,6 +114,7 @@ router.post('/login', async(req, res) => {
 })
 
 router.get('/logout', autenticate,  async(req, res) => {
+
     try{
         const token = req.cookies.token
         res.clearCookie('token', {
