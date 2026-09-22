@@ -1,8 +1,11 @@
 import { useState } from 'react'
 const env = import.meta.env
 import './Registro.css'
+import { useAppContext } from '../../context/AuthContext'
 
 const url = `http://localhost:${env.VITE_PORT}/api/register`
+
+
 
 export function Registro() {
     const [formData, setFormData] = useState({
@@ -10,6 +13,8 @@ export function Registro() {
         password: '',
         email: ''
     })
+
+    const { setIsLogged, setUserName } = useAppContext()
 
     const [notValid, setNotValid] = useState(false)
     const [passwordIssue, setPasswordIssue] = useState(false)
@@ -65,6 +70,8 @@ export function Registro() {
             
             if (status === 201) {
                 setResponse(data.message)
+                setIsLogged(true)
+                setUserName(formData.username)
                 clean()
             } else {
                 setResponse(data.message)
@@ -81,7 +88,7 @@ export function Registro() {
         <div>
             <div className="registerContainer">
                 <form className="registerForm" onSubmit={(e) => handleSubmit(e)}>
-                    <h2>REGISTRO</h2>
+                    <h2>Registro</h2>
                     <div className="fix">
                         <label htmlFor="reg-name">Name</label>
                         <input 

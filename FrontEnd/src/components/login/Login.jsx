@@ -1,14 +1,19 @@
 import { useState } from 'react'
 const env = import.meta.env
 import './Login.css'
+import { useAppContext } from '../../context/AuthContext'
 
 const url = `http://localhost:${env.VITE_PORT}/api/login`
+
+
 
 export function Login() {
     const [formData, setFormData] = useState({
         username: '',
         password: ''
     })
+
+    const { setIsLogged, setUserName } = useAppContext()
 
     const [response, setResponse] = useState('')
 
@@ -47,6 +52,8 @@ export function Login() {
             
             if (status === 200) {
                 setResponse(data.message)
+                setIsLogged(true)
+                setUserName(formData.username)
                 clean()
             } else {
                 setResponse(data.message)

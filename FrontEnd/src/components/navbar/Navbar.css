@@ -1,0 +1,37 @@
+.NavbarContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffd9a7;
+    list-style: none;
+    height: 55.2px;
+}
+
+.NavbarContainer nav {
+    flex: 1;
+}
+
+.NavbarContainer ul {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: end; 
+    align-items: center;
+    margin-inline: 1rem;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+
+
+.NavbarContainer li a {
+    text-decoration: none;
+    color: white;
+    border-radius: 40px;
+    background-color: #ec911a;
+    padding: 0.5rem;
+    transition: 0.3s all;
+    &:hover {
+        background-color: #eda84d;
+    }
+   
+}
