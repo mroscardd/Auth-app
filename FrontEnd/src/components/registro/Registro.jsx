@@ -2,6 +2,7 @@ import { useState } from 'react'
 const env = import.meta.env
 import './Registro.css'
 import { UseAppContext } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const url = `http://localhost:${env.VITE_PORT}/api/register`
 
@@ -13,6 +14,8 @@ export function Registro() {
         password: '',
         email: ''
     })
+
+    const navigate = useNavigate() 
 
     const { setIsLogged, setUserName } = UseAppContext()
 
@@ -73,6 +76,7 @@ export function Registro() {
                 setIsLogged(true)
                 setUserName(formData.username)
                 clean()
+                navigate("/")
             } else {
                 setResponse(data.message)
             }

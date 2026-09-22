@@ -130,6 +130,10 @@ router.get('/logout', autenticate,  async(req, res) => {
 
 })
 
+router.get('/me', autenticate, async(req, res) => {
+    res.status(200).json({user: req.user})
+})
+
 
 
 router.get('/users', autenticate, admin, async(req, res) => {

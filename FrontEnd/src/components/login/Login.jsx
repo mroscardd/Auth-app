@@ -2,6 +2,7 @@ import { useState } from 'react'
 const env = import.meta.env
 import './Login.css'
 import { UseAppContext } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const url = `http://localhost:${env.VITE_PORT}/api/login`
 
@@ -12,6 +13,8 @@ export function Login() {
         username: '',
         password: ''
     })
+
+    const navigate = useNavigate() 
 
     const { setIsLogged, setUserName } = UseAppContext()
 
@@ -55,6 +58,8 @@ export function Login() {
                 setIsLogged(true)
                 setUserName(formData.username)
                 clean()
+                navigate("/")
+
             } else {
                 setResponse(data.message)
             }
