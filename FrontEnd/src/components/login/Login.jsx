@@ -1,7 +1,7 @@
 import { useState } from 'react'
 const env = import.meta.env
 import './Login.css'
-import { useAppContext } from '../../context/AuthContext'
+import { UseAppContext } from '../../context/AuthContext'
 
 const url = `http://localhost:${env.VITE_PORT}/api/login`
 
@@ -13,7 +13,7 @@ export function Login() {
         password: ''
     })
 
-    const { setIsLogged, setUserName } = useAppContext()
+    const { setIsLogged, setUserName } = UseAppContext()
 
     const [response, setResponse] = useState('')
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 const env = import.meta.env
 import './Registro.css'
-import { useAppContext } from '../../context/AuthContext'
+import { UseAppContext } from '../../context/AuthContext'
 
 const url = `http://localhost:${env.VITE_PORT}/api/register`
 
@@ -14,7 +14,7 @@ export function Registro() {
         email: ''
     })
 
-    const { setIsLogged, setUserName } = useAppContext()
+    const { setIsLogged, setUserName } = UseAppContext()
 
     const [notValid, setNotValid] = useState(false)
     const [passwordIssue, setPasswordIssue] = useState(false)
