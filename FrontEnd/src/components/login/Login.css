@@ -77,3 +77,7 @@ label {
 h2 {
     color: rgb(80, 79, 79);
 }
+
+.alertMargin {
+    margin-top: 5rem;
+}

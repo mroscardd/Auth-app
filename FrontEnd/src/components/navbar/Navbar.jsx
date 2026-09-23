@@ -27,7 +27,7 @@ export function Navbar() {
                 <ul> {isLogged ? 
                 (
                     <>
-                    <li>{userName}</li>
+                    <li>Hola, {userName}</li>
                     <li><Link to="/" onClick={() => handleClick()}>Cerrar sesión</Link></li>
                     </>
                 ) :

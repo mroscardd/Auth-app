@@ -28,7 +28,8 @@
     color: white;
     border-radius: 40px;
     background-color: #ec911a;
-    padding: 0.5rem;
+    padding: 0.3rem;
+    padding-inline: 0.5rem;
     transition: 0.3s all;
     &:hover {
         background-color: #eda84d;

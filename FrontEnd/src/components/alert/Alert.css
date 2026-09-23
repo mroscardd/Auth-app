@@ -1,0 +1,36 @@
+.containerAlert {
+    padding: 2rem;
+    background-color: rgba(165, 42, 42, 0.9);
+    border-radius: 10px; 
+    animation: apareceDiv 1.5s ease-out forwards
+}
+
+.containerAlert h2 {
+    font-weight: bolder;
+    color: #f6f3f3;
+    animation: apareceTexo 1.5s ease-out forwards
+}
+
+@keyframes apareceDiv {
+  from {
+
+    background-color: rgba(255, 0, 0, 0); 
+  }
+  to {
+    /* Termina con un 50% de opacidad */
+    background-color: rgba(165, 42, 42, 0.9); 
+  }
+}
+
+@keyframes apareceTexto {
+  from {
+
+    background-color: rgba(255, 0, 0, 0); 
+  }
+  to {
+    /* Termina con un 50% de opacidad */
+    background-color: #f6f3f3; 
+  }
+}
+
+

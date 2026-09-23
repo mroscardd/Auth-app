@@ -3,6 +3,7 @@ const env = import.meta.env
 import './Login.css'
 import { UseAppContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { Alert } from '../alert/Alert'
 
 const url = `http://localhost:${env.VITE_PORT}/api/login`
 
@@ -103,7 +104,7 @@ export function Login() {
                     <button type="submit">Iniciar sesión</button>
                 </form>
                 <div>
-                   { response != '' && <p>{ response }</p> }
+                   { response != '' && <div className="alertMargin"><Alert response={ response } /></div> }
                 </div>
             </div>
         </div>

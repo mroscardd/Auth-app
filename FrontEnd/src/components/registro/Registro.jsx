@@ -3,6 +3,7 @@ const env = import.meta.env
 import './Registro.css'
 import { UseAppContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { Alert } from '../alert/Alert'
 
 const url = `http://localhost:${env.VITE_PORT}/api/register`
 
@@ -133,7 +134,7 @@ export function Registro() {
                     <button type="submit">Registrarse</button>
                 </form>
                 <div>
-                   { response != '' && <p>{ response }</p> }
+                   { response != '' && <Alert response={ response } /> }
                 </div>
             </div>
         </div>
