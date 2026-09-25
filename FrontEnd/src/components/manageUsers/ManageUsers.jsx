@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from 'react-router-dom'
 import "./ManageUsers.css"
+import { useSearchParams } from "react-router-dom"
+import { EditUser } from "../editUser/EditUser"
+
+
 const env = import.meta.env
 
 const url = `http://localhost:${env.VITE_PORT}/api/users`
@@ -8,9 +11,9 @@ const url = `http://localhost:${env.VITE_PORT}/api/users`
 export function ManageUsers() {
     const [users, setUsers] = useState([])
     const [auth, setAuth] = useState(false)
-    const [isVisible, SetIsVisible] = useState(false)
 
-    const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
+    const selectedId = searchParams.get("id")
 
     useEffect(() => {
         fetch(url, {
@@ -24,32 +27,40 @@ export function ManageUsers() {
                     setAuth(true)
                 } 
                 })
-    }, [])
+    }, [users])
 
-    const handleClick = (e) => {
-        e.prevent.default()
-        navigate("/")
+    const handleClick = (e, userId) => {
+        e.preventDefault()
+        setSearchParams({ id: userId })
     }
 
     return (
-        <table className="usersContainer">
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role</th>
-            
-            </tr>
-            { auth && users.map(user => { return (
+            <>
+            {selectedId && <EditUser user={ users.filter(user => user._id === selectedId)[0] } setSearchParams={setSearchParams}/> }
+            <table className="usersContainer">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                { auth && users.map(user => { return (
+                    
+                        <tr key={user._id}>
+                            <td>{user.username}</td>
+                            <td>{user.email}</td>
+                            <td>{user.role}</td>
+                            <td><button className="edit-btn" onClick={(e) => handleClick(e, user._id)}>Editar</button></td>
+                        </tr>
+                    
+                    )}
                 
-                <tr key={user._id}>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                    <td><button className="edit-btn" onClick={(e) => handleClick(e)}>Editar</button></td>
-                </tr>
                 )}
-            )}
-            
-        </table>
-    )
+                </tbody>
+                
+            </table> 
+            </>
+        )
 }

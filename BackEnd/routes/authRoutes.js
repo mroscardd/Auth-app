@@ -145,15 +145,16 @@ router.get('/users', autenticate, admin, async(req, res) => {
 
 
         const users = await collection.find().project({password: 0}).toArray()
+        const usersShown = users.filter(user => user.username !== req.user.username)
            
-        return res.status(200).json(users)
+        return res.status(200).json(usersShown)
         } catch (error) {
             console.error(error)
                 return res.status(500).json({message: "error"})
         }
 })
 
-router.put('/user_role/:id', autenticate, admin, async(req, res) => {
+router.put('/user-role/:id', autenticate, admin, async(req, res) => {
     const user_role = req.user.role
     const user_id = req.user._id
     const id = req.params.id

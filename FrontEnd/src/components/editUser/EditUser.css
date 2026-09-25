@@ -1,0 +1,46 @@
+
+
+.editCard {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    gap: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width:450px;
+    padding: 1rem; 
+    padding-left: 2rem;
+    padding-right: 3rem;
+    background-color: #ffd9a7;
+
+}
+
+.edit-data{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.exit {
+    position: absolute;
+    padding:0;
+    top: -10%;
+    right: -3%;
+    background-color: rgba(0, 0, 0, 0);
+   
+    transition: 0.3s;
+    &:hover {
+        background-color: rgba(0, 0, 0, 0);
+        cursor: pointer;
+    }
+    &:active {
+        transform: scale(0.95);
+    }
+}
+

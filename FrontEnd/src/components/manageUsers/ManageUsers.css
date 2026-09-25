@@ -12,7 +12,7 @@ td {
     border: none;
     border-radius: 50px;
     background-color: #ec911a;
-    padding: 0.1rem;
+    padding-block: 0.1rem;
     color: white;
     font-size: larger;
     object-fit: fill;
