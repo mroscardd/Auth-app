@@ -8,6 +8,7 @@ const url = `http://localhost:${env.VITE_PORT}/api/users`
 export function ManageUsers() {
     const [users, setUsers] = useState([])
     const [auth, setAuth] = useState(false)
+    const [isVisible, SetIsVisible] = useState(false)
 
     const navigate = useNavigate()
 
@@ -39,6 +40,7 @@ export function ManageUsers() {
             
             </tr>
             { auth && users.map(user => { return (
+                
                 <tr key={user._id}>
                     <td>{user.username}</td>
                     <td>{user.email}</td>
