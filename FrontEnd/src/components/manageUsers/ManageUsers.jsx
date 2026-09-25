@@ -17,23 +17,26 @@ export function ManageUsers() {
                 if (status === 200) {
                     setUsers(users)
                     setAuth(true)
-                } else {
-                    setAuth(false)
-                    setUsers([])
-                }
+                } 
                 })
     }, [])
 
     return (
-        <div className="usersContainer">
-            { users.map(user => { return (
-                <div key={user._id}>
-                    <p><strong>username: </strong>{user.username}</p>
-                    <p><strong>email: </strong>{user.email} </p>
-                    <p><strong>role: </strong> {user.role}</p>
-                </div>)}
+        <table className="usersContainer">
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+            { auth && users.map(user => { return (
+                <tr key={user._id}>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>{user.role}</td>
+                </tr>
+                )}
             )}
             
-        </div>
+        </table>
     )
 }
