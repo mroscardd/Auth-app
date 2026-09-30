@@ -146,7 +146,7 @@ router.get('/users', autenticate, admin, async(req, res) => {
 
 
         const users = await collection.find().project({password: 0}).toArray()
-        const usersShown = users.filter(user => user.username !== req.user.username)
+        const usersShown = users.filter(user => user.username !== req.user.username && user.role !== 'superadmin')
            
         return res.status(200).json(usersShown)
         } catch (error) {
@@ -164,6 +164,7 @@ router.put('/user-role/:id', autenticate, admin, async(req, res) => {
         if (id === user_id) {
             return res.status(409).json({ message: "No puedes modificar tus permisos" })
         }
+
 
         if (!ObjectId.isValid(id)) {
             return res.status(400).json({ message: "ID no válido" })
@@ -185,6 +186,10 @@ router.put('/user-role/:id', autenticate, admin, async(req, res) => {
         }
         if (user_role !== "superadmin" && user.role === "admin") {
             return res.status(403).json({message:"You cant modify admin users"})
+        }
+
+        if (user.role === "superadmin") {
+            return res.status(409).json({message:"You cant modify superadmin"})
         }
 
         const { role } = req.body

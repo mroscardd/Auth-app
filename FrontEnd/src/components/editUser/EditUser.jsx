@@ -4,7 +4,7 @@ const env = import.meta.env
 
 
 
-export function EditUser({ user, setSearchParams }) {
+export function EditUser({ user, setSearchParams, change, setChange }) {
     const [role, setRole] = useState(user.role)
 
     const url = `http://localhost:${env.VITE_PORT}/api/user-role/${user._id}`
@@ -30,7 +30,7 @@ export function EditUser({ user, setSearchParams }) {
             if (status === 200) {
                 alert("Actualizado correctamente")
                 setSearchParams({})
-
+                setChange(!change)
             } else {
                 alert(data.message)
                 setSearchParams({})

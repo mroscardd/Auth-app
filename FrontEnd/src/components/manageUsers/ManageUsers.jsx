@@ -10,6 +10,7 @@ const url = `http://localhost:${env.VITE_PORT}/api/users`
 
 export function ManageUsers() {
     const [users, setUsers] = useState([])
+    const [change, setChange] = useState(false)
     const [auth, setAuth] = useState(false)
 
     const [searchParams, setSearchParams] = useSearchParams()
@@ -27,7 +28,7 @@ export function ManageUsers() {
                     setAuth(true)
                 } 
                 })
-    }, [users])
+    }, [change])
 
     const handleClick = (e, userId) => {
         e.preventDefault()
@@ -36,7 +37,12 @@ export function ManageUsers() {
 
     return (
             <>
-            {selectedId && <EditUser user={ users.filter(user => user._id === selectedId)[0] } setSearchParams={setSearchParams}/> }
+            {selectedId && <EditUser 
+                            user={ users.filter(user => user._id === selectedId)[0] } 
+                            setSearchParams={setSearchParams} 
+                            change={change}
+                            setChange={setChange} 
+                            /> }
             <table className="usersContainer">
                 <thead>
                     <tr>
