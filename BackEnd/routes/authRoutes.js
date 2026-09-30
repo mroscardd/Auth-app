@@ -131,7 +131,6 @@ router.get('/logout', autenticate,  async(req, res) => {
 })
 
 router.get('/me', autenticate,  async(req, res) => {
-    console.log(req.user)
     res.status(200).json({user: req.user})
 })
 
