@@ -4,6 +4,7 @@ import { Login } from './components/login/Login'
 import { Navbar } from './components/navbar/Navbar'
 import { Routes, Route} from 'react-router-dom'
 import { ManageUsers } from './components/manageUsers/ManageUsers'
+import { MainPage } from './components/mainPage/MainPage'
 
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<h1>Pagina principal</h1>} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registro />} />
         <Route path="/manage-users" element={<ManageUsers />} />
