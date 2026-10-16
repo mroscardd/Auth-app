@@ -6,7 +6,7 @@ const jwtSecret = process.env.JWTSECRET
 const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:${process.env.MONGO_PORT}`
 const client = new MongoClient(url)
 const dbName = 'usersdb'
-
+const UserModel = require('../models/users.js')
 
 
 class AuthRoutes {
@@ -18,50 +18,34 @@ class AuthRoutes {
     static async register(req, res) {
         const { username, password, email } = req.body
         try {
-            await client.connect()
+  
+            const { id, username, email, role } = await UserModel.createUser(req.body)
 
-            const db = client.db(dbName)
+            const token = jwt.sign({id, username, email, role}, jwtSecret, { expiresIn: '24h' })
 
-            const collection = db.collection('users')
-            console.log('¡Conectado con éxito a MongoDB en Docker!');
-
-            const existingusername = await collection.findOne({username})
-            const existingemail = await collection.findOne({email})
-
-        if (existingusername) {
-            return res.status(409).json({message: "Ya existe el usuario"})
-        }
-
-        if (existingemail) {
-            return res.status(409).json({message: "El correo ya esta registrado"})
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt)
-
-        await collection.insertOne({
-            username, 
-            password: hashedPassword, 
-            email, 
-            role: "user"
-        })
-        const { _id, role } = await collection.findOne({username})
-
-        const token = jwt.sign({_id, username, email, role}, jwtSecret, { expiresIn: '24h' })
-
-        res.cookie(
-            'token', token, {
-                httpOnly: true,
-                sameSite: 'strict',
-                maxAge: 24 * 60 * 60 * 1000
-            })
-        
-        res.status(201).json({message: "Registro exitoso!"})
+            res.cookie(
+                'token', token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 24 * 60 * 60 * 1000
+                })
+            
+            res.status(201).json({message: "Registro exitoso!"})
         
         
         } catch (error) {
             console.error(error)
-            return res.status(500).json({message: "Internal error"})
+
+            if (error.message === 'USERNAME_TAKEN'){
+                return res.status(409).json({message: "El usuario ya existe"})
+            } 
+            if (error.message === 'EMAIL_TAKEN') {
+                return res.status(409).json({message: "El email ya existe"})
+            } 
+            if (error.message === "DATABASE_ERROR") {
+                return res.status(500).json({message: "Problema interno de la base de datos"})
+            }
+            return res.status(500).json({ message: "Problema interno"});
         }
         
     }

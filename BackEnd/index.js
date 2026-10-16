@@ -5,6 +5,9 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const app = express()
 const PORT = process.env.PORT
+const { connectDB } = require('./config/database')
+
+
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -24,7 +27,19 @@ app.get('/', (req, res) => {
     
 })
 
-app.listen(PORT, () => {
-    console.log("puerto: " + PORT)
-})
+
+async function startServer() {
+    try {
+        await connectDB()
+
+        app.listen(PORT, () => {
+            console.log("puerto: " + PORT)
+        })
+    } catch (error) {
+        console.error('Error al iniciar la aplicación:', error)
+        process.exit(1)
+    }
+}
+
+startServer()
 
