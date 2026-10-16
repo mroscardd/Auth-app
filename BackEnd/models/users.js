@@ -1,4 +1,3 @@
-
 const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 const { getDB } = require('../config/database')
@@ -79,7 +78,7 @@ class UserModel {
         const collection = db.collection('users')
 
         const user = await UserModel.getUserById(id)
-        console.log(body)
+
         const userUpdated = await collection.findOneAndUpdate(
             { _id: new ObjectId(id)},
             { $set: body }, 
