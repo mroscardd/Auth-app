@@ -1,11 +1,7 @@
-const { MongoClient } = require('mongodb')
 const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWTSECRET
-const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:${process.env.MONGO_PORT}`
-const client = new MongoClient(url)
-const dbName = 'usersdb'
 const UserModel = require('../models/users.js')
 
 
@@ -130,24 +126,12 @@ class AuthRoutes {
                 return res.status(409).json({ message: "No puedes modificar tus permisos" })
             }
 
-
-            if (!ObjectId.isValid(id)) {
-                return res.status(400).json({ message: "ID no válido" })
-            }
-
-            await client.connect()
-            const db = client.db(dbName)
-            const collection = db.collection('users')
-            console.log('Conectado con éxito a MongoDB');
-
-            
-            const _id = new ObjectId(id)
-            const user = await UserModel.getUserById(_id)
+            const user = await UserModel.getUserById(id)
 
         
             if (!user) {
                 console.log(user)
-                return res.status(404).json({message:"User dont exist"})
+                return res.status(404).json({message:"UserId dont exist"})
             }
             if (user_role !== "superadmin" && user.role === "admin") {
                 return res.status(403).json({message:"You cant modify admin users"})
@@ -157,16 +141,15 @@ class AuthRoutes {
                 return res.status(409).json({message:"You cant modify superadmin"})
             }
 
-            const { role } = req.body
-
-            const updatedUser = await UserModel.updateUser(req.body)
-
-            const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after', projection: { password: 0 } })
+            const userUpdated = await UserModel.updateUser({role: req.body.role}, id)
     
             res.status(200).json({message: "Updated successfully", userUpdated})
         
             } catch (error) {
                 console.error(error)
+                if (error.message === "NO_VALID_ID") {
+                    return res.status(400).json({ message: "UserId dont exist" })
+                }
                 res.status(500).json({message: "Internal problem"})
             }
     }

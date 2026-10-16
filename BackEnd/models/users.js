@@ -1,5 +1,6 @@
 
 const bcrypt = require('bcrypt')
+const { ObjectId } = require('mongodb')
 const { getDB } = require('../config/database')
 
 
@@ -32,7 +33,13 @@ class UserModel {
         const db = getDB()
         const collection = db.collection('users')
 
-        const user = await collection.findOne(id)
+        if (!ObjectId.isValid(id)) {
+                throw new Error("NO_VALID_ID")
+            }
+
+        const _id = new ObjectId(id)    
+        const user = await collection.findOne(_id)
+
         return user
     }
 
@@ -67,9 +74,18 @@ class UserModel {
            
     }   
 
-    static async updateUser({ username, password, email }) {
+    static async updateUser(body, id) {
         const db = getDB()
         const collection = db.collection('users')
+
+        const user = await UserModel.getUserById(id)
+        console.log(body)
+        const userUpdated = await collection.findOneAndUpdate(
+            { _id: new ObjectId(id)},
+            { $set: body }, 
+            { returnDocument: 'after', projection: { password: 0 } })
+
+        return userUpdated
     }
 }    
 
