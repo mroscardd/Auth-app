@@ -51,43 +51,37 @@ class AuthRoutes {
     }
 
     static async login(req, res) {
-        try{
-        await client.connect()
-
-        const db = client.db(dbName)
-
-        const collection = db.collection('users')
-        console.log('Conectado con éxito a MongoDB');
-
         const { username, password } = req.body
-        const existinguser= await collection.findOne({username})
-    
-        if (!existinguser) {
-           
-            return res.status(401).json({message: "Credential are not correct"})
+        try{
+        
+            const existinguser = await UserModel.findExistingUser(req.body)
+        
+            if (!existinguser) {
             
-        } 
+                return res.status(401).json({message: "Credential are not correct"})
+                
+            } 
 
-        const isMatch = await bcrypt.compare(password, existinguser.password)
+            const isMatch = await bcrypt.compare(password, existinguser.password)
 
-        if (isMatch ) {
-            const email = existinguser.email
-            const role = existinguser.role
-            const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+            if (isMatch ) {
+                const email = existinguser.email
+                const role = existinguser.role
+                const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+                
+                res.cookie(
+                    'token', token, {
+                        httpOnly: true,
+                        sameSite: 'strict',
+                        maxAge: 24 * 60 * 60 * 1000
+                    })
+
+                return res.status(200).json({message: "hola " + username})
+
+            } else {
             
-            res.cookie(
-                'token', token, {
-                    httpOnly: true,
-                    sameSite: 'strict',
-                    maxAge: 24 * 60 * 60 * 1000
-                })
-
-            return res.status(200).json({message: "hola " + username})
-
-        } else {
-           
-            return res.status(401).json({message: "Credential are not correct"})
-        }
+                return res.status(401).json({message: "Credential are not correct"})
+            }
 
         } catch (error) {
         
@@ -98,13 +92,13 @@ class AuthRoutes {
 
     static async logout(req, res) {
         try{
-        const token = req.cookies.token
-        res.clearCookie('token', {
-            httpOnly: true,
-            sameSite: 'strict'
-        });
+            const token = req.cookies.token
+            res.clearCookie('token', {
+                httpOnly: true,
+                sameSite: 'strict'
+            });
 
-        return res.status(200).json({message: "You are logout"})
+            return res.status(200).json({message: "You are logout"})
         } catch (error) {
             console.error(error)
             return res.status(500).json({message: "Internal error"})

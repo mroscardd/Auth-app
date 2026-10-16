@@ -1,11 +1,5 @@
-const { MongoClient } = require('mongodb')
+
 const bcrypt = require('bcrypt')
-const { ObjectId } = require('mongodb')
-const jwt = require('jsonwebtoken')
-const jwtSecret = process.env.JWTSECRET
-const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@localhost:${process.env.MONGO_PORT}`
-const client = new MongoClient(url)
-const dbName = 'usersdb'
 const { getDB } = require('../config/database')
 
 
@@ -22,7 +16,6 @@ class UserModel {
             return existingUser
 
         } catch(error) {
-            console.error("Error en el Modelo al buscar usuario:", error)
             throw new Error("DATABASE_ERROR")
         }
     }
