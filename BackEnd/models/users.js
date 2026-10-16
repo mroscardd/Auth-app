@@ -19,6 +19,16 @@ class UserModel {
             throw new Error("DATABASE_ERROR")
         }
     }
+
+    static async getAllUser() {
+        const db = getDB()
+        const collection = db.collection('users')
+
+        const users = await collection.find().project({password: 0}).toArray()
+
+        return users
+    }
+
     static async createUser({ username, password, email }) {
         const existingUser = await this.findExistingUser({ username, email })
 
@@ -40,7 +50,6 @@ class UserModel {
                 role: "user"
         })  
         
-        console.log('cntrol')
         return {
             id: newUser.insertedId,
             username,

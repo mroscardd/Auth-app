@@ -108,71 +108,67 @@ class AuthRoutes {
 
     static async getUsers(req, res) {
         try {
-        await client.connect()
-        const db = client.db(dbName)
-        const collection = db.collection('users')
-        console.log('Conectado con éxito a MongoDB');
+            
+            const users = await UserModel.getAllUser()
 
-
-        const users = await collection.find().project({password: 0}).toArray()
-        const usersShown = users.filter(user => user.username !== req.user.username && user.role !== 'superadmin')
-           
-        return res.status(200).json(usersShown)
+            const usersShown = users.filter(user => user.username !== req.user.username && user.role !== 'superadmin')
+            
+            return res.status(200).json(usersShown)
         } catch (error) {
             console.error(error)
-                return res.status(500).json({message: "error"})
+            return res.status(500).json({message: "error"})
         }
     }
 
     static async updateRole(req, res) {
         const user_role = req.user.role
-    const user_id = req.user._id
-    const id = req.params.id
-    try{
+        const user_id = req.user._id
+        const id = req.params.id
+        try{
+            
+            if (id === user_id) {
+                return res.status(409).json({ message: "No puedes modificar tus permisos" })
+            }
+
+
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).json({ message: "ID no válido" })
+            }
+
+            await client.connect()
+            const db = client.db(dbName)
+            const collection = db.collection('users')
+            console.log('Conectado con éxito a MongoDB');
+
+            
+            const _id = new ObjectId(id)
+            const user = await collection.findOne({ _id })
+
         
-        if (id === user_id) {
-            return res.status(409).json({ message: "No puedes modificar tus permisos" })
-        }
+            if (!user) {
+                console.log(user)
+                return res.status(404).json({message:"User dont exist"})
+            }
+            if (user_role !== "superadmin" && user.role === "admin") {
+                return res.status(403).json({message:"You cant modify admin users"})
+            }
 
+            if (user.role === "superadmin") {
+                return res.status(409).json({message:"You cant modify superadmin"})
+            }
 
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "ID no válido" })
-        }
+            const { role } = req.body
+            req.body.role = role
 
-        await client.connect()
-        const db = client.db(dbName)
-        const collection = db.collection('users')
-        console.log('Conectado con éxito a MongoDB');
-
-        
-        const _id = new ObjectId(id)
-        const user = await collection.findOne({ _id })
-
-       
-        if (!user) {
-            console.log(user)
-            return res.status(404).json({message:"User dont exist"})
-        }
-        if (user_role !== "superadmin" && user.role === "admin") {
-            return res.status(403).json({message:"You cant modify admin users"})
-        }
-
-        if (user.role === "superadmin") {
-            return res.status(409).json({message:"You cant modify superadmin"})
-        }
-
-        const { role } = req.body
-        req.body.role = role
-
-        const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after', projection: { password: 0 } })
-   
-        res.status(200).json({message: "Updated successfully", userUpdated})
+            const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after', projection: { password: 0 } })
+    
+            res.status(200).json({message: "Updated successfully", userUpdated})
         
 
-        } catch (error) {
-            console.error(error)
-            res.status(500).json({message: "Internal problem"})
-        }
+            } catch (error) {
+                console.error(error)
+                res.status(500).json({message: "Internal problem"})
+            }
     }
 }
 
