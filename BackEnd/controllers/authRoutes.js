@@ -11,6 +11,7 @@ const UserModel = require('../models/users.js')
 
 class AuthRoutes {
 
+
     static async register(req, res) {
         const { username, password, email } = req.body
         try {

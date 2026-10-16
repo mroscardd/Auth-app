@@ -5,7 +5,6 @@ const AuthRoutes = require('../controllers/authRoutes')
 
 
 
-router.get('/health', AuthRoutes.health)
 router.post('/register', AuthRoutes.register)
 router.post('/login', AuthRoutes.login)
 router.get('/logout', autenticate, AuthRoutes.logout)
