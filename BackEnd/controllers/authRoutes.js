@@ -142,7 +142,7 @@ class AuthRoutes {
 
             
             const _id = new ObjectId(id)
-            const user = await collection.findOne({ _id })
+            const user = await UserModel.getUserById(_id)
 
         
             if (!user) {
@@ -158,13 +158,13 @@ class AuthRoutes {
             }
 
             const { role } = req.body
-            req.body.role = role
+
+            const updatedUser = await UserModel.updateUser(req.body)
 
             const userUpdated = await collection.findOneAndUpdate({ _id },{ $set: { role: role } }, { returnDocument: 'after', projection: { password: 0 } })
     
             res.status(200).json({message: "Updated successfully", userUpdated})
         
-
             } catch (error) {
                 console.error(error)
                 res.status(500).json({message: "Internal problem"})

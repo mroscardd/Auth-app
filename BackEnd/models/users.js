@@ -25,8 +25,15 @@ class UserModel {
         const collection = db.collection('users')
 
         const users = await collection.find().project({password: 0}).toArray()
-
         return users
+    }
+
+    static async getUserById(id) {
+        const db = getDB()
+        const collection = db.collection('users')
+
+        const user = await collection.findOne(id)
+        return user
     }
 
     static async createUser({ username, password, email }) {
@@ -59,6 +66,11 @@ class UserModel {
         
            
     }   
+
+    static async updateUser({ username, password, email }) {
+        const db = getDB()
+        const collection = db.collection('users')
+    }
 }    
 
 module.exports = UserModel
