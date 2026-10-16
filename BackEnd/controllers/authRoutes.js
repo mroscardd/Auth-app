@@ -11,10 +11,6 @@ const UserModel = require('../models/users.js')
 
 class AuthRoutes {
 
-    static async health(req, res) {
-        return res.status(200).json({status:"ok", sesion: process.uptime()})
-    }
-
     static async register(req, res) {
         const { username, password, email } = req.body
         try {

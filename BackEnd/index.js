@@ -9,22 +9,20 @@ const { connectDB } = require('./config/database')
 
 
 
+
+app.use(express.json())
+app.use(cookieParser())
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
     }))
-app.use(express.json())
-app.use(cookieParser())
 
 const authRoutes = require('./routes/authRoutes')
 app.use('/api', authRoutes)
 
 
-app.get('/', (req, res) => {
-    console.log(req)
-    
-    return res.status(200).json({message:"hola"})
-    
+app.get('/health', (req, res) => {
+    return res.status(200).json({status:"ok", sesion: process.uptime()})
 })
 
 
