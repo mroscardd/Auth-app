@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
+
 const jwtSecret = process.env.JWTSECRET
 
-const autenticate = (req, res, next) => {
+export const autenticate = (req, res, next) => {
     const token = req.cookies.token
 
     try {
@@ -20,7 +21,7 @@ const autenticate = (req, res, next) => {
 
 }
 
-const admin = (req, res,next) => {
+export const admin = (req, res,next) => {
     const userInfo = req.user
 
     if (userInfo && (userInfo.role === 'admin' || userInfo.role === 'superadmin')) {
@@ -32,7 +33,7 @@ const admin = (req, res,next) => {
 
 }
 
-const superadmin = (req, res,next) => {
+export const superadmin = (req, res,next) => {
     const userInfo = req.user
     if (!userInfo || userInfo.role !== 'superadmin') {
 
@@ -42,5 +43,3 @@ const superadmin = (req, res,next) => {
     next()
 
 }
-
-module.exports = { superadmin, admin, autenticate }

@@ -1,13 +1,13 @@
-const express = require('express')
-const jwt = require('jsonwebtoken')
-process.loadEnvFile()
-const cors = require('cors')
-const cookieParser = require('cookie-parser')
+import express from 'express'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import { connectDB } from './config/database.js'
+import { authRouter } from './routes/authRoutes.js'
+
+
+
 const app = express()
 const PORT = process.env.PORT
-const { connectDB } = require('./config/database')
-
-
 
 
 app.use(express.json())
@@ -17,8 +17,8 @@ app.use(cors({
     credentials: true,
     }))
 
-const authRoutes = require('./routes/authRoutes')
-app.use('/api', authRoutes)
+
+app.use('/api', authRouter)
 
 
 app.get('/health', (req, res) => {

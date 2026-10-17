@@ -1,17 +1,19 @@
-const express = require('express')
-const router = express.Router()
-const { superadmin, admin, autenticate } = require('../middlewares/auth-middleware')
-const AuthRoutes = require('../controllers/authRoutes')
+import express from 'express'
+import { superadmin, admin, autenticate } from '../middlewares/auth-middleware.js'
+import { AuthRoutes } from '../controllers/authRoutes.js'
+export const authRouter = express.Router()
+
+
+/*==========================
+            /api
+===========================*/
+
+authRouter.post('/register', AuthRoutes.register)
+authRouter.post('/login', AuthRoutes.login)
+authRouter.get('/logout', autenticate, AuthRoutes.logout)
+authRouter.get('/me', autenticate, AuthRoutes.me)
+authRouter.get('/users', autenticate, admin, AuthRoutes.getUsers)
+authRouter.put('/user-role/:id', autenticate, admin, AuthRoutes.updateRole)
 
 
 
-router.post('/register', AuthRoutes.register)
-router.post('/login', AuthRoutes.login)
-router.get('/logout', autenticate, AuthRoutes.logout)
-router.get('/me', autenticate, AuthRoutes.me)
-router.get('/users', autenticate, admin, AuthRoutes.getUsers)
-router.put('/user-role/:id', autenticate, admin, AuthRoutes.updateRole)
-
-
-
-module.exports = router

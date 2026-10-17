@@ -1,9 +1,9 @@
-const bcrypt = require('bcrypt')
-const { ObjectId } = require('mongodb')
-const { getDB } = require('../config/database')
+import bcrypt from 'bcrypt'
+import { ObjectId } from 'mongodb'
+import { getDB } from '../config/database.js'
 
 
-class UserModel {
+export class UserModel {
     
     static async findExistingUser({ username, email }){
         try {
@@ -87,5 +87,3 @@ class UserModel {
         return userUpdated
     }
 }    
-
-module.exports = UserModel

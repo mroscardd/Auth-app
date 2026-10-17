@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt')
-const { ObjectId } = require('mongodb')
-const jwt = require('jsonwebtoken')
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { UserModel } from '../models/users.js'
+
 const jwtSecret = process.env.JWTSECRET
-const UserModel = require('../models/users.js')
 
 
-class AuthRoutes {
+export class AuthRoutes {
 
 
     static async register(req, res) {
@@ -155,4 +155,3 @@ class AuthRoutes {
     }
 }
 
-module.exports = AuthRoutes
