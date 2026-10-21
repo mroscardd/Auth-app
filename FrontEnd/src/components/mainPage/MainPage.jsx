@@ -27,6 +27,7 @@ export function MainPage() {
     return (
         <>
         <h1>Pagina principal</h1>
+
         { (auth === 'admin' || auth === 'superadmin') && <button className="admin-btn" onClick={(e) => handleClick(e)}>Administrar usuarios</button>}
         </>
     )
