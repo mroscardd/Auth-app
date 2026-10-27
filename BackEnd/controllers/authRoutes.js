@@ -103,13 +103,23 @@ export class AuthRoutes {
     }
 
     static async getUsers(req, res) {
+        const LIMIT = 5
+        const { page } = req.query
+        const user = req.user
+            
         try {
             
-            const users = await UserModel.getAllUser()
+            const dataUsers = await UserModel.getAllUser({ page, LIMIT, user })
 
-            const usersShown = users.filter(user => user.username !== req.user.username && user.role !== 'superadmin')
-            
-            return res.status(200).json(usersShown)
+            const usersShown = dataUsers.users
+            const totalUsers = dataUsers.totalUsers
+            const totalPages = Math.ceil(dataUsers.totalUsers/LIMIT)
+
+            return res.status(200).json({
+                totalUsers,
+                totalPages,
+                usersShown
+            })
         } catch (error) {
             console.error(error)
             return res.status(500).json({message: "error"})

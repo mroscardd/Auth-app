@@ -20,12 +20,33 @@ export class UserModel {
         }
     }
 
-    static async getAllUser() {
+    static async getAllUser({page, LIMIT, user}) {
+
         const db = getDB()
         const collection = db.collection('users')
 
-        const users = await collection.find().project({password: 0}).toArray()
-        return users
+ 
+        const offset = (page - 1) * LIMIT
+
+        const users = await collection.find({
+            username: { $ne: user.username },
+            role: { $ne: 'superadmin' }
+            })
+            .project({password: 0})
+            .skip(offset)
+            .limit(LIMIT)
+            .toArray()
+
+        const totalUsers = await collection.countDocuments(
+            {username: { $ne: user.username }}
+        )
+
+
+        return {
+            offset,
+            totalUsers,
+            users,
+        }
     }
 
     static async getUserById(id) {

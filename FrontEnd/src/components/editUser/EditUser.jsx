@@ -1,20 +1,24 @@
 import './EditUser.css'
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 const env = import.meta.env
 
+const url = `http://localhost:${env.VITE_PORT}/api/user-role/`
 
+export function EditUser({ user }) {
 
-export function EditUser({ user, setSearchParams, change, setChange }) {
     const [role, setRole] = useState(user.role)
-
-    const url = `http://localhost:${env.VITE_PORT}/api/user-role/${user._id}`
+    const [searchParams, setSearchParams] = useSearchParams()
+    
 
     const handleChange = (e) => {
         setRole(e.target.value)
     }
+
+    const url_endpoint = url + user._id
     
     const handleClick = () => {
-        fetch(url, {
+        fetch(url_endpoint, {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
@@ -29,8 +33,8 @@ export function EditUser({ user, setSearchParams, change, setChange }) {
             
             if (status === 200) {
                 alert("Actualizado correctamente")
-                setSearchParams({})
-                setChange(!change)
+                const page = searchParams.get('page')
+                setSearchParams({page: page})
             } else {
                 alert(data.message)
                 setSearchParams({})
@@ -43,6 +47,10 @@ export function EditUser({ user, setSearchParams, change, setChange }) {
     })
     }
 
+    const handleParams = () => {
+        const page = searchParams.get('page')
+        setSearchParams({page: page})
+    }    
 
     return (
 
@@ -62,7 +70,7 @@ export function EditUser({ user, setSearchParams, change, setChange }) {
                 <div>    
                     <button className="edit-btn" onClick={() => handleClick()}>Guardar</button>
                 </div>
-                    <button className="exit" onClick={() => setSearchParams({})}><svg width="64px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                    <button className="exit" onClick={() => handleParams()}><svg width="64px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
                     <g id="SVGRepo_bgCarrier" strokeWidth={0} />
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
                     <g id="SVGRepo_iconCarrier">
