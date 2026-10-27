@@ -18,6 +18,8 @@ export function ManageUsers() {
     const [searchParams, setSearchParams] = useSearchParams()
     const selectedId = searchParams.get("id")
     const selectedPage = searchParams.get("page")
+
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
     
 
     useEffect(() => {
@@ -117,9 +119,7 @@ export function ManageUsers() {
                     <path d="M15 6l-6 6l6 6" />
                     </svg>
                 </Link>
-                <Link to={crearUrlPagina(1)}>1</Link>
-                <Link to={crearUrlPagina(2)}>2</Link>
-                <Link to={crearUrlPagina(3)}>3</Link>
+                {pages.map(e => <Link to={crearUrlPagina(e)}>{e}</Link>)}
                 <Link to={nextPage()}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
                     strokeLinecap="round" strokeLinejoin="round"
