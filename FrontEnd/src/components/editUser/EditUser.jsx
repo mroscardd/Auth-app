@@ -5,11 +5,14 @@ const env = import.meta.env
 
 const url = `http://localhost:${env.VITE_PORT}/api/user-role/`
 
-export function EditUser({ user }) {
+export function EditUser({ users }) {
 
-    const [role, setRole] = useState(user.role)
     const [searchParams, setSearchParams] = useSearchParams()
-    
+    const id = searchParams.get('id')
+
+    const user = users.filter(user => user._id === id)[0]
+    const [role, setRole] = useState(user.role)
+    console.log(user.role)
 
     const handleChange = (e) => {
         setRole(e.target.value)

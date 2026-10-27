@@ -12,9 +12,12 @@ const url = `http://localhost:${env.VITE_PORT}`
 export function ManageUsers() {
     const [users, setUsers] = useState([])
     const [auth, setAuth] = useState(false)
+    const [totalUsers, setTotalUsers] = useState(null)
+    const [totalPages, setTotalPages] = useState(null)
 
     const [searchParams, setSearchParams] = useSearchParams()
     const selectedId = searchParams.get("id")
+    const selectedPage = searchParams.get("page")
     
 
     useEffect(() => {
@@ -34,6 +37,8 @@ export function ManageUsers() {
             .then( ({ users, status }) => {
                 if (status === 200) {
                     setUsers(users.usersShown)
+                    setTotalPages(users.totalPages)
+                    setTotalUsers(users.totalUsers)
                     setAuth(true)
                 } 
                 })
@@ -46,6 +51,29 @@ export function ManageUsers() {
         setSearchParams(params)
     }
 
+    const previusPage = () => {
+
+        const url_end = new URL(window.location)
+        if (parseInt(selectedPage) > 1) {
+            url_end.searchParams.set('page', parseInt(selectedPage) - 1)
+            return `${url_end.toString()}`
+        } else {
+            return `${url_end.toString()}`
+        }
+    }
+
+    const nextPage = () => {
+
+        const url_end = new URL(window.location)
+        if (parseInt(selectedPage) !== totalPages) {
+            url_end.searchParams.set('page', parseInt(selectedPage) + 1)
+            return `${url_end.toString()}`
+        } else {
+            return `${url_end.toString()}`
+        }
+        
+    }
+
     const crearUrlPagina = (page) => {
        
         const url_end = new URL(window.location)
@@ -55,8 +83,7 @@ export function ManageUsers() {
 
     return (
             <>
-            {selectedId && <EditUser 
-                            user={ users.filter(user => user._id === selectedId)[0] } 
+            {selectedId && <EditUser users={users}
                             /> }
             <table className="usersContainer">
                 <thead>
@@ -83,24 +110,24 @@ export function ManageUsers() {
                 
             </table> 
             <div className="pagination">
-                <a href="">
+                <Link to={previusPage()}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                     strokeLinecap="round" strokeLinejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M15 6l-6 6l6 6" />
                     </svg>
-                </a>
+                </Link>
                 <Link to={crearUrlPagina(1)}>1</Link>
                 <Link to={crearUrlPagina(2)}>2</Link>
                 <Link to={crearUrlPagina(3)}>3</Link>
-                <a href="">
+                <Link to={nextPage()}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
                     strokeLinecap="round" strokeLinejoin="round"
                     className="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M9 6l6 6l-6 6" />
                     </svg>
-                </a>
+                </Link>
             </div>
             </>
         )
