@@ -8,6 +8,7 @@ const AppContext = createContext()
 export const AuthProvider = ({children}) => {
     const [isLogged, setIsLogged] = useState(false)
     const [userName, setUserName] = useState('')
+    const [userRole, setUserRole] = useState('')
 
     useEffect(() => {
         fetch(url, {
@@ -22,6 +23,7 @@ export const AuthProvider = ({children}) => {
             if (data.status === 200) {
                 setIsLogged(true)
                 setUserName(data.user.username)
+                setUserRole(data.user.role)
             }
         }).catch(error => {console.log(error)})
 
@@ -29,7 +31,7 @@ export const AuthProvider = ({children}) => {
     }, [])
 
     return (
-        <AppContext.Provider value={{ isLogged, setIsLogged, userName, setUserName }}>
+        <AppContext.Provider value={{ isLogged, setIsLogged, userName, setUserName, userRole }}>
             {children}
         </AppContext.Provider>
     )

@@ -93,11 +93,12 @@ export function ManageUsers() {
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
                 { auth && users.map(user => { return (
-                    
                         <tr key={user._id}>
                             <td>{user.username}</td>
                             <td>{user.email}</td>
@@ -119,7 +120,7 @@ export function ManageUsers() {
                     <path d="M15 6l-6 6l6 6" />
                     </svg>
                 </Link>
-                {pages.map(e => <Link to={crearUrlPagina(e)}>{e}</Link>)}
+                {pages.map(e => <Link key={e} to={crearUrlPagina(e)}>{e}</Link>)}
                 <Link to={nextPage()}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
                     strokeLinecap="round" strokeLinejoin="round"

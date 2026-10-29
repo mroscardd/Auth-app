@@ -1,6 +1,7 @@
 import './EditUser.css'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { UseAppContext } from '../../context/AuthContext'
 const env = import.meta.env
 
 const url = `http://localhost:${env.VITE_PORT}/api/user-role/`
@@ -10,9 +11,11 @@ export function EditUser({ users }) {
     const [searchParams, setSearchParams] = useSearchParams()
     const id = searchParams.get('id')
 
+    const { userRole } = UseAppContext()
+    console.log(userRole)
     const user = users.filter(user => user._id === id)[0]
     const [role, setRole] = useState(user.role)
-    console.log(user.role)
+    
 
     const handleChange = (e) => {
         setRole(e.target.value)
@@ -66,7 +69,7 @@ export function EditUser({ users }) {
                         <select id="role-select" value={role} onChange={(e) => handleChange(e)}>
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
-                            <option value="superadmin">Superadmin</option>
+                            { userRole === 'superadmin' && <option value="superadmin">Superadmin</option> }
                         </select>
                     </div>
                 </div>
