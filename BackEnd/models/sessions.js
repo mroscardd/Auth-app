@@ -11,9 +11,9 @@ export class SessionModel {
         const db = getDB()
         const collection = db.collection('sessions')
 
-        
+        let selector 
         while (true) {
-            let selector = crypto.randomBytes(16).toString('hex')
+            selector = crypto.randomBytes(16).toString('hex')
             const existingSelector = await collection.findOne({selector})
             if (!existingSelector) {
                 break
@@ -27,11 +27,14 @@ export class SessionModel {
 
         const treintaDias = 30 * 24 * 60 * 60 *1000
         const expiresAt = new Date(Date.now() + treintaDias)
+        
         const newSession = await collection.insertOne({
                 user_id, 
                 selector,
                 validator, 
                 expiresAt
         }) 
+
+        return `${selector}:${validator}`
     }
 }
