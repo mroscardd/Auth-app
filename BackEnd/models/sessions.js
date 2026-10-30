@@ -27,7 +27,7 @@ export class SessionModel {
 
         const treintaDias = 30 * 24 * 60 * 60 *1000
         const expiresAt = new Date(Date.now() + treintaDias)
-        
+
         const newSession = await collection.insertOne({
                 user_id, 
                 selector,
@@ -35,6 +35,6 @@ export class SessionModel {
                 expiresAt
         }) 
 
-        return `${selector}:${validator}`
+        return `${selector}:${validator_nocrypt}`
     }
 }
