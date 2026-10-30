@@ -10,28 +10,27 @@ export const AuthProvider = ({children}) => {
     const [userName, setUserName] = useState('')
     const [userRole, setUserRole] = useState('')
 
-    useEffect(() => {
-        fetch(url, {
-                    method: 'GET',
-                    credentials: 'include' 
-                })
-        .then(response => { return response.json().then(data => ({
-            status: response.status,
-            user: data.user
-            }))})
-        .then(data => {
-            if (data.status === 200) {
-                setIsLogged(true)
-                setUserName(data.user.username)
-                setUserRole(data.user.role)
-            }
-        }).catch(error => {console.log(error)})
+    const login = () => {
+            fetch(url, {
+                        method: 'GET',
+                        credentials: 'include' 
+                    })
+            .then(response => { return response.json().then(data => ({
+                status: response.status,
+                user: data.user
+                }))})
+            .then(data => {
+                if (data.status === 200) {
+                    setIsLogged(true)
+                    setUserName(data.user.username)
+                    setUserRole(data.user.role)
+                }
+            }).catch(error => {console.log(error)})
 
-
-    }, [])
+    }
 
     return (
-        <AppContext.Provider value={{ isLogged, setIsLogged, userName, setUserName, userRole }}>
+        <AppContext.Provider value={{ isLogged, setIsLogged, userName, setUserName, userRole, login }}>
             {children}
         </AppContext.Provider>
     )

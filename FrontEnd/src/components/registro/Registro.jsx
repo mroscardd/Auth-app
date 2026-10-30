@@ -18,7 +18,7 @@ export function Registro() {
 
     const navigate = useNavigate() 
 
-    const { setIsLogged, setUserName } = UseAppContext()
+    const { setIsLogged, setUserName, login } = UseAppContext()
 
     const [notValid, setNotValid] = useState(false)
     const [passwordIssue, setPasswordIssue] = useState(false)
@@ -70,12 +70,13 @@ export function Registro() {
             data: data
             }))
         })
-          .then(({ status,  data }) => {
+          .then(async({ status,  data }) => {
             
             if (status === 201) {
                 setResponse(data.message)
                 setIsLogged(true)
                 setUserName(formData.username)
+                await login()
                 clean()
                 navigate("/")
             } else {

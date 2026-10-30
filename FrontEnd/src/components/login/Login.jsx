@@ -17,7 +17,7 @@ export function Login() {
 
     const navigate = useNavigate() 
 
-    const { setIsLogged, setUserName } = UseAppContext()
+    const { setIsLogged, setUserName, login } = UseAppContext()
 
     const [response, setResponse] = useState('')
 
@@ -52,15 +52,15 @@ export function Login() {
             data: data
             }))
         })
-          .then(({ status,  data }) => {
+          .then(async({ status,  data }) => {
             
             if (status === 200) {
+                await login()
                 setResponse(data.message)
                 setIsLogged(true)
                 setUserName(formData.username)
                 clean()
                 navigate("/")
-
             } else {
                 setResponse(data.message)
             }
