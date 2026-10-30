@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { UserModel } from '../models/users.js'
+import { SessionModel } from '../models/sessions.js'
 
 const jwtSecret = process.env.JWTSECRET
 
@@ -43,18 +44,10 @@ export class AuthRoutes {
     }
 
     static async login(req, res) {
-        const { username, password } = req.body
+        const { username} = req.body
         try{
         
-            const existinguser = await UserModel.findExistingUser(req.body)
-        
-            if (!existinguser) {
-            
-                return res.status(401).json({message: "Credential are not correct"})
-                
-            } 
-
-            const autenticatedUser = await UserModel.findAutenticatedUser(req. body)
+            const autenticatedUser = await UserModel.findAutenticatedUser(req.body)
 
             if (autenticatedUser) {
                 const email = autenticatedUser.email
@@ -69,6 +62,7 @@ export class AuthRoutes {
                     })
 
                 return res.status(200).json({message: "hola " + username})
+   
 
             } else {
             
