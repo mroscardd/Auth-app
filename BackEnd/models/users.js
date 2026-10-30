@@ -19,6 +19,27 @@ export class UserModel {
             throw new Error("DATABASE_ERROR")
         }
     }
+    static async findAutenticatedUser({ username, email, password }){
+        try {
+  
+            const db = getDB()
+            const collection = db.collection('users')
+
+            const existingUser = await this.findExistingUser({username, email})
+
+            if(!existingUser) return null
+
+            const isMatch = await bcrypt.compare(password, existingUser.password)
+            
+                if (isMatch ) {
+                    return existingUser
+                }
+            return null
+
+        } catch(error) {
+            throw new Error("DATABASE_ERROR")
+        }
+    }
 
     static async getAllUser({page, LIMIT, user}) {
 
@@ -107,4 +128,5 @@ export class UserModel {
 
         return userUpdated
     }
-}    
+}  
+

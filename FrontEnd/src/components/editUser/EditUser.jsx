@@ -12,8 +12,8 @@ export function EditUser({ users }) {
     const id = searchParams.get('id')
 
     const { userRole } = UseAppContext()
-    console.log(userRole)
     const user = users.filter(user => user._id === id)[0]
+    
     const [role, setRole] = useState(user.role)
     
 

@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { UserModel } from '../models/users.js'
 
@@ -55,12 +54,12 @@ export class AuthRoutes {
                 
             } 
 
-            const isMatch = await bcrypt.compare(password, existinguser.password)
+            const autenticatedUser = await UserModel.findAutenticatedUser(req. body)
 
-            if (isMatch ) {
-                const email = existinguser.email
-                const role = existinguser.role
-                const token = jwt.sign({_id: existinguser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+            if (autenticatedUser) {
+                const email = autenticatedUser.email
+                const role = autenticatedUser.role
+                const token = jwt.sign({_id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
                 
                 res.cookie(
                     'token', token, {
