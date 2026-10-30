@@ -85,15 +85,17 @@ export class UserModel {
     }
 
     static async createUser({ username, password, email }) {
+
+        const db = getDB()
+        const collection = db.collection('users') 
+        
         const existingUser = await this.findExistingUser({ username, email })
 
         if (existingUser) {
                 if (existingUser.username === username) throw new Error('USERNAME_TAKEN');
                 if (existingUser.email === email) throw new Error('EMAIL_TAKEN');
             } 
-
-        const db = getDB()
-        const collection = db.collection('users')    
+   
         
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt)
