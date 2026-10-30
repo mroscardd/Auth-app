@@ -6,8 +6,6 @@ import { getDB } from '../config/database.js'
 export class SessionModel {
     static async createSession(user_id) {
 
-        
-
         const db = getDB()
         const collection = db.collection('sessions')
 
@@ -28,13 +26,17 @@ export class SessionModel {
         const treintaDias = 30 * 24 * 60 * 60 *1000
         const expiresAt = new Date(Date.now() + treintaDias)
 
-        const newSession = await collection.insertOne({
-                user_id, 
-                selector,
-                validator, 
-                expiresAt
-        }) 
+        const existingId = await collection.findOne({ user_id })
 
-        return `${selector}:${validator_nocrypt}`
+        await collection.findOneAndUpdate(
+            { user_id },
+            { $set: {selector, validator, expiresAt} },
+            { upsert: true })
+
+
+        return {
+            selector,
+            validator: validator_nocrypt
+        }
     }
 }

@@ -44,12 +44,13 @@ export class AuthRoutes {
     }
 
     static async login(req, res) {
-        const { username} = req.body
+        const { username } = req.body
+        const rememberMe = true
         try{
         
             const autenticatedUser = await UserModel.findAutenticatedUser(req.body)
-
-            if (autenticatedUser) {
+       
+            if (autenticatedUser && !rememberMe) {
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
                 const token = jwt.sign({_id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
@@ -63,7 +64,13 @@ export class AuthRoutes {
 
                 return res.status(200).json({message: "hola " + username})
    
-
+            } else if  (autenticatedUser && rememberMe) {
+                const user_id = autenticatedUser._id
+                const token_value = await SessionModel.createSession(user_id)
+                const selector = token_value.selector
+                const validator = token_value.validator
+                return res.status(201).json({message: "Sesión creada correctamente"})
+                
             } else {
             
                 return res.status(401).json({message: "Credential are not correct"})
