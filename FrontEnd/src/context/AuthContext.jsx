@@ -1,4 +1,4 @@
-import {createContext, useContext, useState, useEffect } from 'react'
+import {createContext, useContext, useState } from 'react'
 const env = import.meta.env
 
 const url = `http://localhost:${env.VITE_PORT}/api/me`
