@@ -4,15 +4,26 @@ const jwtSecret = process.env.JWTSECRET
 
 export const autenticate = (req, res, next) => {
     const token = req.cookies.token
+    const longSessionToken = req.cookies.session
 
     try {
-    if (!token) {
+    if (!token && !longSessionToken) {
         return res.status(401).json({message:"You have to loggin/register"})
     }
+
+    let payload
+    if (longSessionToken) {
+
+        req.user = payload
+        next()
+
+    } else {
+        
+        payload = jwt.verify(token, jwtSecret)
+        req.user = payload
+        next()
+    }
     
-    const payload = jwt.verify(token, jwtSecret)
-    req.user = payload
-    next()
 
     } catch (error) {
         console.error(error)

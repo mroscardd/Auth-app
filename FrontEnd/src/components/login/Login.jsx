@@ -12,7 +12,8 @@ const url = `http://localhost:${env.VITE_PORT}/api/login`
 export function Login() {
     const [formData, setFormData] = useState({
         username: '',
-        password: ''
+        password: '',
+        rememberMe: false
     })
 
     const navigate = useNavigate() 
@@ -24,6 +25,12 @@ export function Login() {
     const handleChange = (e, property) => {
         const value = e.target.value
         setFormData({...formData, [property]: value})
+    }
+
+    const handleCheck = (e) => {
+
+        console.log(e.target.checked)
+        setFormData(prev => ({...prev, rememberMe: e.target.checked}))
     }
 
 
@@ -102,6 +109,20 @@ export function Login() {
                     </div>    
 
                     <button type="submit">Iniciar sesión</button>
+
+                    <div className="check">
+                        <label htmlFor="rememberMe">
+                            Mantener sesión activa 
+                        </label>    
+                            <input 
+                                type="checkbox" 
+                                name="rememberMe" 
+                                id="rememberMe"
+                                onChange={(e) => handleCheck(e)}
+                                checked = {formData.rememberMe}
+                            /> 
+                        
+                    </div>
                 </form>
                 <div>
                    { response != '' && <div className="alertMargin"><Alert response={ response } /></div> }

@@ -26,17 +26,20 @@ export class SessionModel {
         const treintaDias = 30 * 24 * 60 * 60 *1000
         const expiresAt = new Date(Date.now() + treintaDias)
 
-        const existingId = await collection.findOne({ user_id })
-
         await collection.findOneAndUpdate(
             { user_id },
             { $set: {selector, validator, expiresAt} },
             { upsert: true })
 
-
         return {
             selector,
             validator: validator_nocrypt
         }
+    }
+
+    static async deleteUserSession(selector) {
+        const db = getDB()
+        const collection = db.collection('sessions')
+        await collection.deleteOne({selector})
     }
 }

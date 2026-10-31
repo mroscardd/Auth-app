@@ -44,8 +44,7 @@ export class AuthRoutes {
     }
 
     static async login(req, res) {
-        const { username } = req.body
-        const rememberMe = true
+        const { username, rememberMe } = req.body
         try{
         
             const autenticatedUser = await UserModel.findAutenticatedUser(req.body)
@@ -69,7 +68,17 @@ export class AuthRoutes {
                 const token_value = await SessionModel.createSession(user_id)
                 const selector = token_value.selector
                 const validator = token_value.validator
-                return res.status(201).json({message: "Sesión creada correctamente"})
+
+                const token = `${selector}:${validator}`
+
+                res.cookie(
+                    'session', token, {
+                        httpOnly: true,
+                        sameSite: 'strict',
+                        maxAge: 30 * 24 * 60 * 60 * 1000
+                    }
+                )
+                return res.status(201).json({message: "hola " + username})
                 
             } else {
             
@@ -86,7 +95,18 @@ export class AuthRoutes {
     static async logout(req, res) {
         try{
             const token = req.cookies.token
+            const session = req.cookies.session
+
+            if (session) {
+                const selector = session.split(':')[0]
+                await SessionModel.deleteUserSession(selector)
+            }
+           
             res.clearCookie('token', {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+            res.clearCookie('session', {
                 httpOnly: true,
                 sameSite: 'strict'
             });

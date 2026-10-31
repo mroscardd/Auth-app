@@ -42,6 +42,19 @@ input {
 
 }
 
+.check {
+    display: flex;
+    gap: 1rem;
+    & label {
+        font-size: small;
+    }
+
+}
+
+.check input:hover {
+    cursor: pointer
+}
+
 button {
     margin-top: 1rem;
     border: none;
