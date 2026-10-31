@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken'
+import { SessionModel } from '../models/sessions.js'
+import { UserModel } from '../models/users.js'
+import bcrypt from 'bcrypt'
 
 const jwtSecret = process.env.JWTSECRET
 
-export const autenticate = (req, res, next) => {
+export const autenticate = async(req, res, next) => {
     const token = req.cookies.token
     const longSessionToken = req.cookies.session
 
@@ -12,17 +15,47 @@ export const autenticate = (req, res, next) => {
     }
 
     let payload
-    if (longSessionToken) {
+    if (token){
 
+        payload = jwt.verify(token, jwtSecret)
+        console.log(payload)
         req.user = payload
         next()
 
     } else {
-        
-        payload = jwt.verify(token, jwtSecret)
+        const selector = longSessionToken.split(':')[0]
+        const validator = longSessionToken.split(':')[1]
+        const userSession = await SessionModel.findUserSession(selector)
+        if (Date.now() > userSession.expiresAt) {
+            return res.status(401).json({message:"Session expired, loggin again"})
+        }
+
+        const match = await bcrypt.compare(validator, userSession.validator)
+
+        if (!match) {   
+            await SessionModel.deleteUserSession(selector)
+            console.log('check')
+            res.clearCookie('session', {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+            
+            return res.status(401).json({message:"Inconsistent cookies"})
+        }
+
+        const user = await UserModel.getUserById(userSession.user_id)
+
+        payload = {
+            id: user._id.toString(), 
+            username: user.username,
+            email: user.email, 
+            role: user.role
+        }
+        console.log(payload)
         req.user = payload
         next()
-    }
+
+    } 
     
 
     } catch (error) {

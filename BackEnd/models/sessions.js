@@ -42,4 +42,10 @@ export class SessionModel {
         const collection = db.collection('sessions')
         await collection.deleteOne({selector})
     }
+    static async findUserSession(selector) {
+        const db = getDB()
+        const collection = db.collection('sessions')
+        const userSession = await collection.findOne({selector})
+        return userSession
+    }
 }

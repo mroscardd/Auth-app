@@ -55,11 +55,12 @@ export class AuthRoutes {
                 const token = jwt.sign({_id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
                 
                 res.cookie(
-                    'token', token, {
-                        httpOnly: true,
-                        sameSite: 'strict',
-                        maxAge: 24 * 60 * 60 * 1000
-                    })
+                'token', token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 24 * 60 * 60 * 1000
+                })
+
 
                 return res.status(200).json({message: "hola " + username})
    
@@ -69,15 +70,26 @@ export class AuthRoutes {
                 const selector = token_value.selector
                 const validator = token_value.validator
 
-                const token = `${selector}:${validator}`
+                const longSessionToken = `${selector}:${validator}`
 
                 res.cookie(
-                    'session', token, {
+                    'session', longSessionToken, {
                         httpOnly: true,
                         sameSite: 'strict',
                         maxAge: 30 * 24 * 60 * 60 * 1000
                     }
                 )
+
+                const email = autenticatedUser.email
+                const role = autenticatedUser.role
+                const token = jwt.sign({_id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+
+                res.cookie(
+                    'token', token, {
+                        httpOnly: true,
+                        sameSite: 'strict',
+                        maxAge: 24 * 60 * 60 * 1000
+                    })
                 return res.status(201).json({message: "hola " + username})
                 
             } else {
@@ -95,10 +107,10 @@ export class AuthRoutes {
     static async logout(req, res) {
         try{
             const token = req.cookies.token
-            const session = req.cookies.session
+            const longSessionToken = req.cookies.session
 
-            if (session) {
-                const selector = session.split(':')[0]
+            if (longSessionToken) {
+                const selector = longSessionToken.split(':')[0]
                 await SessionModel.deleteUserSession(selector)
             }
            
@@ -106,10 +118,11 @@ export class AuthRoutes {
                 httpOnly: true,
                 sameSite: 'strict'
             })
+
             res.clearCookie('session', {
                 httpOnly: true,
                 sameSite: 'strict'
-            });
+            })
 
             return res.status(200).json({message: "You are logout"})
         } catch (error) {
