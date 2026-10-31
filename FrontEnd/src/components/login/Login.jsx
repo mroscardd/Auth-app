@@ -40,7 +40,8 @@ export function Login() {
         setFormData({
             username: '',
             password: '',
-            email: ''       
+            email: '',
+            rememberMe: false       
         })
     
     }
