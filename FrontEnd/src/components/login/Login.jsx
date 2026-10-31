@@ -28,8 +28,6 @@ export function Login() {
     }
 
     const handleCheck = (e) => {
-
-        console.log(e.target.checked)
         setFormData(prev => ({...prev, rememberMe: e.target.checked}))
     }
 
@@ -79,6 +77,7 @@ export function Login() {
         setResponse("Ha habido un problema al enviar la solicitud")
     })
 }
+
 
     return (
         <div>

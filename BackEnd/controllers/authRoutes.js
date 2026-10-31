@@ -90,7 +90,7 @@ export class AuthRoutes {
                         sameSite: 'strict',
                         maxAge: 24 * 60 * 60 * 1000
                     })
-                return res.status(201).json({message: "hola " + username})
+                return res.status(200).json({message: "hola " + username})
                 
             } else {
             
