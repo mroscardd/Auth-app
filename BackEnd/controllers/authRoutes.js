@@ -52,13 +52,13 @@ export class AuthRoutes {
             if (autenticatedUser && !rememberMe) {
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({_id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
                 
                 res.cookie(
                 'token', token, {
                     httpOnly: true,
                     sameSite: 'strict',
-                    maxAge: 24 * 60 * 60 * 1000
+                    maxAge: 24 * 60 * 20 * 1000
                 })
 
 
@@ -82,7 +82,7 @@ export class AuthRoutes {
 
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({_id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
 
                 res.cookie(
                     'token', token, {
@@ -173,7 +173,6 @@ export class AuthRoutes {
 
         
             if (!user) {
-                console.log(user)
                 return res.status(404).json({message:"UserId dont exist"})
             }
             if (user_role !== "superadmin" && user.role === "admin") {

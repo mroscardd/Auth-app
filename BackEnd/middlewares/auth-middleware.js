@@ -8,33 +8,51 @@ const jwtSecret = process.env.JWTSECRET
 export const autenticate = async(req, res, next) => {
     const token = req.cookies.token
     const longSessionToken = req.cookies.session
+    const refreshToken = req.cookies.refreshToken
 
     try {
-    if (!token && !longSessionToken) {
+    if (!token && !longSessionToken && !refreshToken) {
         return res.status(401).json({message:"You have to loggin/register"})
     }
 
     let payload
-    if (token){
-
-        payload = jwt.verify(token, jwtSecret)
-        console.log(payload)
+    if (token || refreshToken){
+        if(token) {
+            payload = jwt.verify(token, jwtSecret)
+        } else {
+            payload = jwt.verify(refreshToken, jwtSecret)
+        }
         req.user = payload
+        console.log(req.user)
         next()
 
     } else {
         const selector = longSessionToken.split(':')[0]
         const validator = longSessionToken.split(':')[1]
         const userSession = await SessionModel.findUserSession(selector)
+        
+        if (!userSession) {
+            res.clearCookie('session', {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+            return res.status(401).json({message:"We have a problem"})
+        }
+
         if (Date.now() > userSession.expiresAt) {
+            await SessionModel.deleteUserSession(selector)
+            res.clearCookie('session', {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
             return res.status(401).json({message:"Session expired, loggin again"})
         }
+          
 
         const match = await bcrypt.compare(validator, userSession.validator)
 
         if (!match) {   
             await SessionModel.deleteUserSession(selector)
-            console.log('check')
             res.clearCookie('session', {
                 httpOnly: true,
                 sameSite: 'strict'
@@ -51,8 +69,17 @@ export const autenticate = async(req, res, next) => {
             email: user.email, 
             role: user.role
         }
-        console.log(payload)
+        const newRefreshToken = jwt.sign(payload, jwtSecret, { expiresIn: '24h' })
+        
+            res.cookie(
+                'refreshToken', newRefreshToken, {
+                httpOnly: true,
+                sameSite: 'strict',
+                maxAge: 24 * 60 * 60 * 1000
+                }
+            )
         req.user = payload
+        console.log(req.user)
         next()
 
     } 
