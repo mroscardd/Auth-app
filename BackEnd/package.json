@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": " node --watch --env-file=.env index.js",
+    "util": "node --env-file=.env utils/seedData.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -74,6 +74,9 @@ export function Registro() {
             
             if (status === 201) {
                 setResponse(data.message)
+                setTimeout(() => {
+                        setResponse('')
+                     }, 3000)
                 setIsLogged(true)
                 setUserName(formData.username)
                 await login()
@@ -85,10 +88,13 @@ export function Registro() {
             
         })
         .catch(error => {
-        console.log(error)
-        setResponse("Ha habido un problema al enviar la solicitud")
-    })
-}
+            console.log(error)
+            setResponse("Ha habido un problema al enviar la solicitud")
+            setTimeout(() => {
+                        setResponse('')
+                     }, 3000) 
+        })
+    }
 
     return (
         <div>

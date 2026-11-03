@@ -63,20 +63,29 @@ export function Login() {
             if (status === 200) {
                 await login()
                 setResponse(data.message)
+                setTimeout(() => {
+                        setResponse('')
+                     }, 3000)  
                 setIsLogged(true)
                 setUserName(formData.username)
                 clean()
                 navigate("/")
             } else {
                 setResponse(data.message)
+                setTimeout(() => {
+                        setResponse('')
+                     }, 3000) 
             }
             
         })
         .catch(error => {
-        console.log(error)
-        setResponse("Ha habido un problema al enviar la solicitud")
-    })
-}
+            console.log(error)
+            setResponse("Ha habido un problema al enviar la solicitud")
+            setTimeout(() => {
+                        setResponse('')
+                     }, 3000) 
+        })
+    }
 
 
     return (
@@ -125,7 +134,7 @@ export function Login() {
                     </div>
                 </form>
                 <div>
-                   { response != '' && <div className="alertMargin"><Alert response={ response } /></div> }
+                   { response && <div className="alertMargin"><Alert response={ response } /></div> }
                 </div>
             </div>
         </div>

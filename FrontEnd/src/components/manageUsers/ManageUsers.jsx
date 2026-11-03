@@ -3,7 +3,8 @@ import "./ManageUsers.css"
 import { useSearchParams } from "react-router-dom"
 import { EditUser } from "../editUser/EditUser"
 import { Link } from "react-router-dom"
-
+import { UseAppContext } from '../../context/AuthContext'
+import { Alert } from '../alert/Alert'
 
 const env = import.meta.env
 
@@ -14,6 +15,10 @@ export function ManageUsers() {
     const [auth, setAuth] = useState(false)
     const [totalUsers, setTotalUsers] = useState(null)
     const [totalPages, setTotalPages] = useState(null)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [toogleRendering, setToggleRendering] = useState(true)
+
+    const { userRole } = UseAppContext()
 
     const [searchParams, setSearchParams] = useSearchParams()
     const selectedId = searchParams.get("id")
@@ -44,13 +49,47 @@ export function ManageUsers() {
                     setAuth(true)
                 } 
                 })
-    }, [searchParams])
+    }, [searchParams, toogleRendering])
 
-    const handleClick = (e, userId) => {
+    const handleEdit = (e, userId) => {
         e.preventDefault()
         const params = new URLSearchParams(searchParams)
         params.set("id", userId)
         setSearchParams(params)
+    }
+
+    const handleDelete = (e, userId) => {
+        e.preventDefault()
+        window.confirm('Seguro que quieres eliminar al usuario')
+        fetch(`${url}/api/users/${userId}`, {
+                method: 'DELETE',
+                credentials: 'include' 
+                })
+            .then(response => {
+                console.log(response.status)
+                if (response.status == 204) {
+                    setAlertMessage('Usuario borrado')
+                    setToggleRendering(prev => !prev)
+                    setTimeout(() => {
+                        setAlertMessage('');
+                     }, 3000);
+                } else if (response.status == 404) {
+                    setAlertMessage('Este usuario no existe en la base de datos')
+                    setTimeout(() => {
+                        setAlertMessage('');
+                     }, 3000);
+                } else {
+                    setAlertMessage('Problema interno')
+                    setTimeout(() => {
+                        setAlertMessage('');
+                     }, 3000);
+                }
+            
+         })   
+        .catch(error => {
+            console.log(error)
+            setResponse("Ha habido un problema al enviar la solicitud")
+    }) 
     }
 
     const previusPage = () => {
@@ -93,7 +132,7 @@ export function ManageUsers() {
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Action</th>
+                        <th className="buttons">Action</th>
 
                     </tr>
                 </thead>
@@ -103,7 +142,15 @@ export function ManageUsers() {
                             <td>{user.username}</td>
                             <td>{user.email}</td>
                             <td>{user.role}</td>
-                            <td><button className="edit-btn" onClick={(e) => handleClick(e, user._id)}>Editar</button></td>
+                            <td>
+                               
+                                    <button className="edit-btn" onClick={(e) => handleEdit(e, user._id)}>Editar</button>
+                                    { 
+                                        userRole == "superadmin" && <button className="edit-btn" onClick={(e) => handleDelete(e, user._id)}>Eliminar</button>
+                                    }
+                               
+                            </td>
+
                         </tr>
                     
                     )}
@@ -129,6 +176,7 @@ export function ManageUsers() {
                     <path d="M9 6l6 6l-6 6" />
                     </svg>
                 </Link>
+                {alertMessage && <Alert response={ alertMessage } />}
             </div>
             </>
         )

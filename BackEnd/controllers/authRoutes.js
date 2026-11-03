@@ -136,7 +136,7 @@ export class AuthRoutes {
     }
 
     static async getUsers(req, res) {
-        const LIMIT = 5
+        const LIMIT = 10
         const { page } = req.query
         const user = req.user
             
@@ -202,7 +202,7 @@ export class AuthRoutes {
                 const deleteUser = await UserModel.deleteUserById(id)
                 if (deleteUser.deletedCount != 0) {
                     console.log(deleteUser.deletedCount)
-                    return res.status(200).json({message: `User ${id} deleted: ${deleteUser.deletedCount} usuarios deleted`})
+                    return res.status(204).send()
                 } 
                 return res.status(404).json({message: "Not user in db found"})
             } catch(error){
