@@ -130,5 +130,16 @@ export class UserModel {
 
         return userUpdated
     }
+
+    static async deleteUserById(id){
+            const db = getDB()
+            const collection = db.collection('users')
+    
+            const user = await UserModel.getUserById(id)
+    
+            const deleteUser = await collection.deleteOne({_id: new ObjectId(id)})
+    
+            return deleteUser
+        }
 }  
 

@@ -195,5 +195,23 @@ export class AuthRoutes {
                 res.status(500).json({message: "Internal problem"})
             }
     }
+
+     static async deleteUser(req, res){
+            try{
+                const { id } = req.params
+                const deleteUser = await UserModel.deleteUserById(id)
+                if (deleteUser.deletedCount != 0) {
+                    console.log(deleteUser.deletedCount)
+                    return res.status(200).json({message: `User ${id} deleted: ${deleteUser.deletedCount} usuarios deleted`})
+                } 
+                return res.status(404).json({message: "Not user in db found"})
+            } catch(error){
+                console.error(error)
+                if (error.message === "NO_VALID_ID") {
+                    return res.status(400).json({ message: "UserId dont exist" })
+                }
+                res.status(500).json({message: "Internal problem"})
+            }
+        }
 }
 

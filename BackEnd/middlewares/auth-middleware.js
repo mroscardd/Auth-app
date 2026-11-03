@@ -23,7 +23,6 @@ export const autenticate = async(req, res, next) => {
             payload = jwt.verify(refreshToken, jwtSecret)
         }
         req.user = payload
-        console.log(req.user)
         next()
 
     } else {

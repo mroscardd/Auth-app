@@ -14,6 +14,6 @@ authRouter.get('/logout', autenticate, AuthRoutes.logout)
 authRouter.get('/me', autenticate, AuthRoutes.me)
 authRouter.get('/users', autenticate, admin, AuthRoutes.getUsers)
 authRouter.put('/user-role/:id', autenticate, admin, AuthRoutes.updateRole)
-
+authRouter.delete('/users/:id', autenticate, superadmin, AuthRoutes.deleteUser)
 
 
