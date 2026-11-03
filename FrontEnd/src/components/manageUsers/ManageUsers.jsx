@@ -88,7 +88,7 @@ export function ManageUsers() {
          })   
         .catch(error => {
             console.log(error)
-            setResponse("Ha habido un problema al enviar la solicitud")
+            setAlertMessage("Ha habido un problema al enviar la solicitud")
     }) 
     }
 
