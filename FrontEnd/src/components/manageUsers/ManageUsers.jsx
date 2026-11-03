@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import "./ManageUsers.css"
 import { useSearchParams } from "react-router-dom"
 import { EditUser } from "../editUser/EditUser"
-import { Link } from "react-router-dom"
 import { UseAppContext } from '../../context/AuthContext'
 import { Alert } from '../alert/Alert'
 import { Pagination } from "../pagination/Pagination"
@@ -166,6 +165,7 @@ export function ManageUsers() {
                 crearUrlPagina={crearUrlPagina}
                 pages={pages}
             />
+            {alertMessage && <Alert response={ alertMessage } />}
         </>
         )
 }
