@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 
 const env = import.meta.env
 
-const url = `http://localhost:${env.VITE_PORT}`
+const url = `${env.VITE_API}`
 
 export function ManageUsers() {
     const [users, setUsers] = useState([])

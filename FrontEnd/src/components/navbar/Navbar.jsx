@@ -3,7 +3,7 @@ import { UseAppContext } from '../../context/AuthContext'
 import { Link } from 'react-router-dom'
 const env = import.meta.env
 
-const url = `http://localhost:${env.VITE_PORT}/api/logout`
+const url = `${env.VITE_API}/api/logout`
 
 export function Navbar() {
     const {userName, isLogged, setIsLogged, setUserName} = UseAppContext()

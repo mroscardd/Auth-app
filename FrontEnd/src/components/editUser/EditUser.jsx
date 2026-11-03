@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { UseAppContext } from '../../context/AuthContext'
 const env = import.meta.env
 
-const url = `http://localhost:${env.VITE_PORT}/api/user-role/`
+const url = `${env.VITE_API}/api/user-role/`
 
 export function EditUser({ users }) {
 

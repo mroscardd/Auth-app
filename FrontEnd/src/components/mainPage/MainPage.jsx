@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 const env = import.meta.env
 
 
-const url = `http://localhost:${env.VITE_PORT}/api/me`
+const url = `${env.VITE_API}/api/me`
 
 
 export function MainPage() {
