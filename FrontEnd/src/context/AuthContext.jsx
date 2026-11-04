@@ -1,4 +1,4 @@
-import {createContext, useContext, useState } from 'react'
+import {createContext, useContext, useState, useEffect } from 'react'
 const env = import.meta.env
 
 const url = `${env.VITE_API}/api/me`
@@ -24,11 +24,17 @@ export const AuthProvider = ({children}) => {
                     setIsLogged(true)
                     setUserName(data.user.username)
                     setUserRole(data.user.role)
+                    
                 }
             }).catch(error => {console.log(error)})
 
     }
 
+    useEffect(()=>{
+        login()
+    }, [])
+    
+    console.log(isLogged)
     return (
         <AppContext.Provider value={{ isLogged, setIsLogged, userName, setUserName, userRole, login }}>
             {children}
