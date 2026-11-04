@@ -273,7 +273,7 @@ Es idempotente: puedes ejecutarlo varias veces y no duplicará usuarios existent
 
 ```bash
 # Conectarse al contenedor
-docker exec -it mi_mongodb mongosh -u root -p password --authenticationDatabase admin
+docker exec -it mi_mongodb mongosh -u your_username -p your_password --authenticationDatabase admin
 
 # Dentro de mongosh
 use usersdb
