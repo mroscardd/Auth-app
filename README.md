@@ -126,13 +126,10 @@ El `docker-compose.yml` expone MongoDB en **`localhost:27019`** con las credenci
 
 ### 4. Configurar las variables de entorno
 
-Copia los archivos de ejemplo y ajusta los valores si es necesario.
+Renombra los archivos de ejemplo y ajusta los valores si es necesario.
 
-**Windows (PowerShell):**
-
-
- BackEnd/.env.example BackEnd/.env
- FrontEnd/.env.example FrontEnd/.env
+ BackEnd/.env.example ---> BackEnd/.env
+ FrontEnd/.env.example ---> FrontEnd/.env
 
 
 Para que funcione con el MongoDB de Docker, `BackEnd/.env` debe contener al menos:
@@ -140,8 +137,8 @@ Para que funcione con el MongoDB de Docker, `BackEnd/.env` debe contener al meno
 ```env
 PORT=3010
 MONGO_PORT=27019
-MONGO_USER=root
-MONGO_PASS=password
+MONGO_USER=your_username
+MONGO_PASS=your_password
 JWTSECRET=cambia_esto_por_un_secreto_largo_y_aleatorio
 ```
 
