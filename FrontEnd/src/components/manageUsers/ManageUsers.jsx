@@ -23,8 +23,6 @@ export function ManageUsers() {
     const [searchParams, setSearchParams] = useSearchParams()
     const selectedId = searchParams.get("id")
     const selectedPage = searchParams.get("page")
-
-    const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
     
 
     useEffect(() => {
@@ -92,80 +90,53 @@ export function ManageUsers() {
     }) 
     }
 
-    const previusPage = () => {
 
-        const url_end = new URL(window.location)
-        if (parseInt(selectedPage) > 1) {
-            url_end.searchParams.set('page', parseInt(selectedPage) - 1)
-            return `${url_end.toString()}`
-        } else {
-            return `${url_end.toString()}`
-        }
-    }
 
-    const nextPage = () => {
-
-        const url_end = new URL(window.location)
-        if (parseInt(selectedPage) !== totalPages) {
-            url_end.searchParams.set('page', parseInt(selectedPage) + 1)
-            return `${url_end.toString()}`
-        } else {
-            return `${url_end.toString()}`
-        }
-        
-    }
-
-    const crearUrlPagina = (page) => {
-       
-        const url_end = new URL(window.location)
-        url_end.searchParams.set('page', page)
-        return `${url_end.toString()}`
-    }
 
     return (
-        <>
-            {selectedId && <EditUser users={users}
-                            /> }
-            <table className="usersContainer">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th className="buttons">Action</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                { auth && users.map(user => { return (
-                        <tr key={user._id}>
-                            <td>{user.username}</td>
-                            <td>{user.email}</td>
-                            <td>{user.role}</td>
-                            <td>
-                               
-                                    <button className="edit-btn" onClick={(e) => handleEdit(e, user._id)}>Editar</button>
-                                    { 
-                                        userRole == "superadmin" && <button className="edit-btn" onClick={(e) => handleDelete(e, user._id)}>Eliminar</button>
-                                    }
-                               
-                            </td>
+        <div className="container-users">
+            
+            <div className="table-container">
+                {selectedId && <EditUser users={users}/> }
+                <table className="usersContainer">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th className="buttons">Action</th>
 
                         </tr>
+                    </thead>
+                    <tbody>
+                    { auth && users.map(user => { return (
+                            <tr key={user._id}>
+                                <td>{user.username}</td>
+                                <td>{user.email}</td>
+                                <td>{user.role}</td>
+                                <td>
+                                
+                                        <button className="edit-btn" onClick={(e) => handleEdit(e, user._id)}>Editar</button>
+                                        { 
+                                            userRole == "superadmin" && <button className="edit-btn" onClick={(e) => handleDelete(e, user._id)}>Eliminar</button>
+                                        }
+                                
+                                </td>
+
+                            </tr>
+                        
+                        )}
                     
                     )}
-                
-                )}
-                </tbody>
-                
-            </table> 
+                    </tbody>
+                    
+                </table> 
+            </div>
             <Pagination 
-                previusPage={previusPage} 
-                nextPage={nextPage} 
-                crearUrlPagina={crearUrlPagina}
-                pages={pages}
+                totalPages={totalPages}
+                selectedPage={selectedPage}
             />
             {alertMessage && <Alert response={ alertMessage } />}
-        </>
+        </div>
         )
 }

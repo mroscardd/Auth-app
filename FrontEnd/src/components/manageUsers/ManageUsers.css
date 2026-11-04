@@ -1,5 +1,6 @@
 .usersContainer {
     margin-top: 2rem;
+    width: 100%;
 }
 
 td {
@@ -32,3 +33,10 @@ td {
 .buttons {
     width: 20rem;
 }
+
+.container-users{
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}  
