@@ -20,8 +20,7 @@ export class SessionModel {
 
         const validator_nocrypt = crypto.randomBytes(32).toString('hex')
 
-        const salt = await bcrypt.genSalt(10);
-        const validator = await bcrypt.hash(validator_nocrypt, salt)
+        const validator = await bcrypt.hash(validator_nocrypt, 10)
 
         const treintaDias = 30 * 24 * 60 * 60 *1000
         const expiresAt = new Date(Date.now() + treintaDias)
@@ -30,6 +29,55 @@ export class SessionModel {
             { user_id },
             { $set: {selector, validator, expiresAt} },
             { upsert: true })
+
+        return {
+            selector,
+            validator: validator_nocrypt
+        }
+    }
+
+    static async refreshSession(selector, validator) {
+        const db = getDB()
+        const collection = db.collection('sessions')
+
+        const treintaDias = 30 * 24 * 60 * 60 *1000
+        const validator_nocrypt = crypto.randomBytes(32).toString('hex')
+
+        const userSession = await this.findUserSession(selector)
+
+        if (userSession) {
+            const match = await bcrypt.compare(validator, userSession.validator)
+        
+                if (!match) {   
+                    await this.deleteUserSession(selector)
+                    throw new Error("Error to refreshsession")
+                }
+        } else {
+            throw new Error ("Error to refreshsession")
+        }   
+
+        if (Date.now() < userSession.expiresAt) {
+            await this.deleteUserSession(selector)
+           
+        } else {
+            throw new Error ("Error to refreshsession")
+        }  
+        
+
+      
+        const newValidator = await bcrypt.hash(validator_nocrypt, 10)
+
+    
+        const expiresAt = new Date(Date.now() + treintaDias)
+
+        const result = await collection.findOneAndUpdate(
+            { selector, validator: userSession.validator},
+            { $set: {validator: newValidator, expiresAt} }
+        )
+
+        if (!result) {
+            throw new Error("Error to refresh session")
+        }       
 
         return {
             selector,
