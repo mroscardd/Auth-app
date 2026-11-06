@@ -4,16 +4,20 @@ import './Pagination.css'
 
 export function Pagination({ totalPages, selectedPage }) {
 
-
     let pages
-    if (selectedPage < 4) {
-        pages = Array.from({ length: 5 }, (_, i) => i + 1)
-
-    } else if (selectedPage >= 4 && selectedPage < totalPages - 2){
-        pages = Array.from({ length: 5 }, (_, i) => i + (selectedPage - 3) + 1 )
-    
+    if (totalPages < 6) {
+        pages = Array.from({ length: totalPages }, (_, i) => i + 1)
     } else {
-        pages = Array.from({ length: 5 }, (_, i) => i + (totalPages - 5) + 1 )
+    
+        if (selectedPage < 4) {
+            pages = Array.from({ length: 5 }, (_, i) => i + 1)
+
+        } else if (selectedPage >= 4 && selectedPage < totalPages - 2){
+            pages = Array.from({ length: 5 }, (_, i) => i + (selectedPage - 3) + 1 )
+        
+        } else {
+            pages = Array.from({ length: 5 }, (_, i) => i + (totalPages - 5) + 1 )
+        }
     }
 
 

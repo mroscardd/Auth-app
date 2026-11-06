@@ -34,7 +34,6 @@ export const AuthProvider = ({children}) => {
         login()
     }, [])
     
-    console.log(isLogged)
     return (
         <AppContext.Provider value={{ isLogged, setIsLogged, userName, setUserName, userRole, login }}>
             {children}
