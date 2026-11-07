@@ -137,12 +137,12 @@ export class AuthRoutes {
 
     static async getUsers(req, res) {
         const LIMIT = 10
-        const { page, textToFilter, roleFilter } = req.query
+        const { page, search, role } = req.query
         const user = req.user
             
         try {
             
-            const dataUsers = await UserModel.getAllUser({ page, LIMIT, user, textToFilter, roleFilter })
+            const dataUsers = await UserModel.getAllUser({ page, LIMIT, user, search, role })
 
             const usersShown = dataUsers.users
             const totalUsers = dataUsers.totalUsers

@@ -41,27 +41,44 @@ export class UserModel {
         }
     }
 
-    static async getAllUser({page, LIMIT, user, textToFilter, roleFilter}) {
+    static async getAllUser({page, LIMIT, user, search, role}) {
 
         const db = getDB()
         const collection = db.collection('users')
 
- 
+        let roleFilter = [{ role: { $ne: 'superadmin' } }]
+
+        if (role) {
+            roleFilter.push({ role })
+        } 
+
+        let searchFilter = [{ username: { $ne: user.username } }]
+
+        if (search) {
+            searchFilter.push({ $or: [
+                { username: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } }
+            ]}
+            )
+        }
+        console.log(searchFilter)
+
         const offset = (page - 1) * LIMIT
 
         const users = await collection.find({
-            username: { $ne: user.username },
-            role: { $ne: 'superadmin' }
+            $and: [...roleFilter, 
+                   ...searchFilter]
             })
             .project({password: 0})
             .skip(offset)
             .limit(LIMIT)
             .toArray()
 
-        const totalUsers = await collection.countDocuments(
-            {username: { $ne: user.username }}
+        const totalUsers = await collection.countDocuments(({
+            $and: [...roleFilter, 
+                ...searchFilter]
+            }) 
         )
-
 
         return {
             offset,
