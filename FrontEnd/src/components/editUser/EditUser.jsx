@@ -6,7 +6,7 @@ const env = import.meta.env
 
 const url = `${env.VITE_API}/api/users/`
 
-export function EditUser({ user, deleteEditVisible }) {
+export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
 
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -38,6 +38,7 @@ export function EditUser({ user, deleteEditVisible }) {
             if (status === 200) {
                 alert("Actualizado correctamente")
                 deleteEditVisible()
+                setToggleRendering(prev => !prev)
                 const page = searchParams.get('page')
                 setSearchParams({page: page})
             } else {

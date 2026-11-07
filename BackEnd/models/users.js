@@ -41,7 +41,7 @@ export class UserModel {
         }
     }
 
-    static async getAllUser({page, LIMIT, user}) {
+    static async getAllUser({page, LIMIT, user, textToFilter, roleFilter}) {
 
         const db = getDB()
         const collection = db.collection('users')

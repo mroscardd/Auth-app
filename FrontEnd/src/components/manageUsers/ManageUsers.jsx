@@ -24,7 +24,6 @@ export function ManageUsers() {
     const [searchParams] = useSearchParams()
     const selectedPage = searchParams.get("page")
     
-
     useEffect(() => {
 
         const endpoint = new URL('/api/users', url)
@@ -57,7 +56,6 @@ export function ManageUsers() {
                 credentials: 'include' 
                 })
             .then(response => {
-                console.log(response.status)
                 if (response.status == 204) {
                     setAlertMessage('Usuario borrado')
                     setToggleRendering(prev => !prev)
@@ -97,7 +95,11 @@ export function ManageUsers() {
         <div className="container-users">
             
             <div className="table-container">
-                {editVisibleUser && <EditUser user={editVisibleUser} deleteEditVisible={deleteEditVisible} /> }
+                {editVisibleUser && <EditUser 
+                                        user={editVisibleUser} 
+                                        deleteEditVisible={deleteEditVisible}
+                                        setToggleRendering={setToggleRendering}
+                                     /> }
                 <table className="usersContainer">
                     <thead>
                         <tr>
