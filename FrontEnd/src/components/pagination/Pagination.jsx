@@ -68,8 +68,8 @@ export function Pagination({ totalPages, selectedPage }) {
 
     return (
     <div className="pagination">
-        <Link to={firstPage()}>first</Link>
-        <Link className="svg" to={previusPage()}>
+        <Link to={firstPage()} className="extremeLink">first</Link>
+        <Link to={previusPage()} className="svgLink">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -91,14 +91,14 @@ export function Pagination({ totalPages, selectedPage }) {
                                         }
                             >{p}
                         </Link>})}
-        <Link to={nextPage()}>
+        <Link to={nextPage()} className="svgLink">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M9 7l6 6l-6 6" />
             </svg>
         </Link>
-        <Link to={lastPage()}>last</Link>
+        <Link to={lastPage()} className="extremeLink">last</Link>
     </div>
     )
 }

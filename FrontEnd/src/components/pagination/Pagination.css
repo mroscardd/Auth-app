@@ -30,20 +30,18 @@
     transform: scale(1.05)
 }
 
-.pagination > :nth-child(2),
-.pagination > :nth-child(8) {
+a.svgLink {
     padding: 0.5rem 0.3rem;
 }
 
-.pagination > :first-child,
-.pagination > :last-child {
+
+a.extremeLink {
     border: none;
     background-color: #8a8987;
 }
 
 
-.pagination > :first-child:hover,
-.pagination > :last-child:hover {
+a.extremeLink:hover {
     background-color: #a29e9a;
     cursor: pointer;
     transform: scale(1.05)
