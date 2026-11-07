@@ -17,11 +17,11 @@ export function ManageUsers() {
     const [totalPages, setTotalPages] = useState(null)
     const [alertMessage, setAlertMessage] = useState('')
     const [toogleRendering, setToggleRendering] = useState(true)
+    const [editVisibleUser, setEditVisibleUser] = useState(null)
 
     const { userRole } = UseAppContext()
 
-    const [searchParams, setSearchParams] = useSearchParams()
-    const selectedId = searchParams.get("id")
+    const [searchParams] = useSearchParams()
     const selectedPage = searchParams.get("page")
     
 
@@ -48,13 +48,6 @@ export function ManageUsers() {
                 } 
                 })
     }, [searchParams, toogleRendering])
-
-    const handleEdit = (e, userId) => {
-        e.preventDefault()
-        const params = new URLSearchParams(searchParams)
-        params.set("id", userId)
-        setSearchParams(params)
-    }
 
     const handleDelete = (e, userId) => {
         e.preventDefault()
@@ -90,14 +83,21 @@ export function ManageUsers() {
     }) 
     }
 
+    const handleEdit = (e, userId) => {
+        e.preventDefault()
+        setEditVisibleUser(userId)
+    }
 
+    const deleteEditVisible = () => {
+        setEditVisibleUser(null)
+    }
 
 
     return (
         <div className="container-users">
             
             <div className="table-container">
-                {selectedId && <EditUser users={users}/> }
+                {editVisibleUser && <EditUser user={editVisibleUser} deleteEditVisible={deleteEditVisible} /> }
                 <table className="usersContainer">
                     <thead>
                         <tr>
@@ -116,7 +116,7 @@ export function ManageUsers() {
                                 <td>{user.role}</td>
                                 <td>
                                 
-                                        <button className="edit-btn" onClick={(e) => handleEdit(e, user._id)}>Editar</button>
+                                        <button className="edit-btn" onClick={(e) => handleEdit(e, user)}>Editar</button>
                                         { 
                                             userRole == "superadmin" && <button className="edit-btn" onClick={(e) => handleDelete(e, user._id)}>Eliminar</button>
                                         }

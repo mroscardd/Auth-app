@@ -4,15 +4,13 @@ import { useSearchParams } from 'react-router-dom'
 import { UseAppContext } from '../../context/AuthContext'
 const env = import.meta.env
 
-const url = `${env.VITE_API}/api/user-role/`
+const url = `${env.VITE_API}/api/users/`
 
-export function EditUser({ users }) {
+export function EditUser({ user, deleteEditVisible }) {
 
     const [searchParams, setSearchParams] = useSearchParams()
-    const id = searchParams.get('id')
 
     const { userRole } = UseAppContext()
-    const user = users.filter(user => user._id === id)[0]
     
     const [role, setRole] = useState(user.role)
     
@@ -39,6 +37,7 @@ export function EditUser({ users }) {
             
             if (status === 200) {
                 alert("Actualizado correctamente")
+                deleteEditVisible()
                 const page = searchParams.get('page')
                 setSearchParams({page: page})
             } else {
@@ -53,7 +52,8 @@ export function EditUser({ users }) {
     })
     }
 
-    const handleParams = () => {
+    const handleExit = () => {
+        deleteEditVisible()
         const page = searchParams.get('page')
         setSearchParams({page: page})
     }    
@@ -76,7 +76,7 @@ export function EditUser({ users }) {
                 <div>    
                     <button className="edit-btn" onClick={() => handleClick()}>Guardar</button>
                 </div>
-                    <button className="exit" onClick={() => handleParams()}><svg width="64px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                    <button className="exit" onClick={() => handleExit()}><svg width="64px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
                     <g id="SVGRepo_bgCarrier" strokeWidth={0} />
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
                     <g id="SVGRepo_iconCarrier">
