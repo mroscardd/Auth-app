@@ -14,11 +14,6 @@ export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
     
     const [role, setRole] = useState(user.role)
     
-
-    const handleChange = (e) => {
-        setRole(e.target.value)
-    }
-
     const url_endpoint = url + user._id
     
     const handleClick = () => {
@@ -39,24 +34,31 @@ export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
                 alert("Actualizado correctamente")
                 deleteEditVisible()
                 setToggleRendering(prev => !prev)
-                const page = searchParams.get('page')
-                setSearchParams({page: page})
+                setPageParams()
             } else {
                 alert(data.message)
-                setSearchParams({})
+                setPageParams()
             }
             
         })
         .catch(error => {
         console.log(error)
         alert("Ha habido un problema al enviar la solicitud")
-    })
+        })
+    }
+
+    const setPageParams = () => {
+        const page = searchParams.get('page')
+        setSearchParams({page: page})
     }
 
     const handleExit = () => {
         deleteEditVisible()
-        const page = searchParams.get('page')
-        setSearchParams({page: page})
+        setPageParams()
+    }    
+
+    const handleChange = (e) => {
+        setRole(e.target.value)
     }    
 
     return (
