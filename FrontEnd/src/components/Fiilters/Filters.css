@@ -1,0 +1,85 @@
+select {
+    appearance: none; 
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+
+    width: 100%;
+    padding: 12px 40px 12px 16px; /* Más espacio a la derecha para la nueva flecha */
+    font-size: 1rem;
+    color: #333333;
+    background-color: rgb(253, 194, 122);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+select:focus-visible {
+    outline: none;
+    
+}
+
+.selectContainer {
+    position: relative;
+    display: inline-block;
+    width: 8.3rem;
+    border-radius: 8px;
+}
+
+.selectContainer::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTkuNSA4LjI1bC03LjUgNy41LTcuNS03LjUiLz48L3N2Zz4=');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none
+}
+
+
+
+
+.filtersContainer{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    gap: 5rem;
+    background-color: bisque;
+    border-radius: 50rem ;
+    margin: 1rem;
+    overflow: hidden;
+}
+
+.searchBox  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+.searchBox svg {
+    padding: 0.3rem;
+    margin: 0.3rem
+}
+
+.filtersContainer input {
+    padding: 0.5rem;
+    font-size: medium;
+    border: none;
+    border-radius: 5px;
+    background-color: bisque;
+}
+
+.filtersContainer input::placeholder{
+    font-size: large;
+}
+
+.filtersContainer input:focus-visible {
+    outline: none;
+}

@@ -34,7 +34,7 @@
     }
 }
 
-input {
+.registerContainer input {
     padding: 1rem;
     border: 2px solid #ffd9a7;
     border-radius: 5px;

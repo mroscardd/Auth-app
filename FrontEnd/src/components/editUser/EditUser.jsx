@@ -68,11 +68,13 @@ export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
                     <p>role actual: {user.role}</p>
                     <div className="edit-select">
                         <label htmlFor='role-select'>Cambiar role: </label>
-                        <select id="role-select" value={role} onChange={(e) => handleChange(e)}>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                            { userRole === 'superadmin' && <option value="superadmin">Superadmin</option> }
-                        </select>
+                        <div className="select-edit-select">
+                            <select id="role-select" value={role} onChange={(e) => handleChange(e)}>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                                { userRole === 'superadmin' && <option value="superadmin">Superadmin</option> }
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div>    

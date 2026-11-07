@@ -5,6 +5,7 @@ import { EditUser } from "../editUser/EditUser"
 import { UseAppContext } from '../../context/AuthContext'
 import { Alert } from '../alert/Alert'
 import { Pagination } from "../pagination/Pagination"
+import { Filters } from "../Fiilters/Filters"
 
 const env = import.meta.env
 
@@ -93,13 +94,14 @@ export function ManageUsers() {
 
     return (
         <div className="container-users">
-            
-            <div className="table-container">
-                {editVisibleUser && <EditUser 
+            {editVisibleUser && <EditUser 
                                         user={editVisibleUser} 
                                         deleteEditVisible={deleteEditVisible}
                                         setToggleRendering={setToggleRendering}
                                      /> }
+            
+            <div className="table-container">
+                <Filters totalUsers={totalUsers}/>
                 <table className="usersContainer">
                     <thead>
                         <tr>

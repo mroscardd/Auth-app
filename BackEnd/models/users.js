@@ -61,7 +61,6 @@ export class UserModel {
             ]}
             )
         }
-        console.log(searchFilter)
 
         const offset = (page - 1) * LIMIT
 
@@ -76,7 +75,7 @@ export class UserModel {
 
         const totalUsers = await collection.countDocuments(({
             $and: [...roleFilter, 
-                ...searchFilter]
+                   ...searchFilter]
             }) 
         )
 
