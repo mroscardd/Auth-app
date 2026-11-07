@@ -64,6 +64,8 @@ export function Pagination({ totalPages, selectedPage }) {
         return `${url_end.toString()}`
     }
 
+    
+
     return (
     <div className="pagination">
         <Link to={firstPage()}>first</Link>
@@ -74,13 +76,20 @@ export function Pagination({ totalPages, selectedPage }) {
                 <path d="M15 7l-6 6l6 6" />
             </svg>
         </Link>
-        {pages.map(e => {
+        {pages.map(p => {
 
             return <Link 
-                            key={e} 
-                            to={crearUrlPagina(e)}
-                            className={Number(selectedPage) === e ? 'active' : ''}
-                            >{e}
+                            key={p} 
+                            to={crearUrlPagina(p)}
+                            className={selectedPage
+                                        ? Number(selectedPage) === p 
+                                            ? 'active' 
+                                            : '' 
+                                        : p === 1
+                                            ? 'active'
+                                            : ''
+                                        }
+                            >{p}
                         </Link>})}
         <Link to={nextPage()}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
