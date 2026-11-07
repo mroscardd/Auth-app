@@ -65,7 +65,7 @@ export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
             <div className="editCard">
                 <div className="edit-data">
                     <h3>{ user.username }</h3>
-                    <p>role actual: {user.role}</p>
+                    <p>Role actual: {user.role}</p>
                     <div className="edit-select">
                         <label htmlFor='role-select'>Cambiar role: </label>
                         <div className="select-edit-select">
