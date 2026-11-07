@@ -22,8 +22,8 @@ export class SessionModel {
 
         const validator = await bcrypt.hash(validator_nocrypt, 10)
 
-        const treintaDias = 7 * 24 * 60 * 60 *1000
-        const expiresAt = new Date(Date.now() + treintaDias)
+        const sieteDias = 7 * 24 * 60 * 60 *1000
+        const expiresAt = new Date(Date.now() + sieteDias)
 
         await collection.findOneAndUpdate(
             { user_id },
@@ -40,14 +40,13 @@ export class SessionModel {
         const db = getDB()
         const collection = db.collection('sessions')
 
-        const treintaDias = 7 * 24 * 60 * 60 *1000
+        const sieteDias = 7 * 24 * 60 * 60 *1000
 
         const userSession = await this.findUserSession(selector)
 
         if (userSession) {
             const match = await bcrypt.compare(validator, userSession.validator)
                 if (!match) {   
-                    await this.deleteUserSession(selector)
                     throw new Error("Error to refresh session")
                 }
         } else {
@@ -61,17 +60,20 @@ export class SessionModel {
         
         const validator_nocrypt = crypto.randomBytes(32).toString('hex')
         const newValidator = await bcrypt.hash(validator_nocrypt, 10)
-        const expiresAt = new Date(Date.now() + treintaDias)
+        const expiresAt = new Date(Date.now() + sieteDias)
 
         const result = await collection.findOneAndUpdate(
-            { selector, validator: userSession.validator},
+            {   
+                selector, 
+                validator: userSession.validator,
+                expiresAt: { $gt: new Date() }
+            },
             { $set: {validator: newValidator, expiresAt} },
             { returnDocument: 'after' }
         )
-        const match = await bcrypt.compare(validator_nocrypt, result.validator)
 
         if (!result) {
-            throw new Error("Error to refresh session")
+            throw new Error("Session already rotated or invalid")
         }   
         return {
             selector,

@@ -54,7 +54,7 @@ export const autenticate = async(req, res, next) => {
         const match = await bcrypt.compare(validator, userSession.validator)
     
         if (!match) {   
-            await SessionModel.deleteUserSession(selector)
+
             res.clearCookie('sessionToken', {
                 httpOnly: true,
                 sameSite: 'strict'
@@ -89,10 +89,10 @@ export const autenticate = async(req, res, next) => {
         const email = user.email
         const role = user.role
         const username = user.username
-        const token = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
         
         res.cookie(
-            'accessToken', token, {
+            'accessToken', newAccesstoken, {
                 httpOnly: true,
                 sameSite: 'strict',
                 maxAge: 15 * 60 * 1000
@@ -112,7 +112,6 @@ export const autenticate = async(req, res, next) => {
             return res.status(401).json({message:"loggin again"})
         
     }
-
 }
 
 export const admin = (req, res,next) => {
