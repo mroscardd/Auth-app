@@ -27,9 +27,8 @@ export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
             status: response.status,
             data: data
             }))
-        })
-          .then(({ status,  data }) => {
-            
+        }).then(({ status,  data }) => {
+          
             if (status === 200) {
                 alert("Actualizado correctamente")
                 deleteEditVisible()
@@ -40,11 +39,11 @@ export function EditUser({ user, deleteEditVisible, setToggleRendering }) {
                 setPageParams()
             }
             
-        })
-        .catch(error => {
+        }).catch(error => {
         console.log(error)
         alert("Ha habido un problema al enviar la solicitud")
         })
+        
     }
 
     const setPageParams = () => {
