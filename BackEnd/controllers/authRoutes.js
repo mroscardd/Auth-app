@@ -14,13 +14,13 @@ export class AuthRoutes {
   
             const { id, username, email, role } = await UserModel.createUser(req.body)
 
-            const token = jwt.sign({id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+            const token = jwt.sign({id, username, email, role}, jwtSecret, { expiresIn: '15min' })
 
             res.cookie(
-                'token', token, {
+                'accessToken', token, {
                     httpOnly: true,
                     sameSite: 'strict',
-                    maxAge: 24 * 60 * 60 * 1000
+                    maxAge: 15 * 60 * 1000
                 })
             
             res.status(201).json({message: "Registro exitoso!"})
@@ -52,13 +52,13 @@ export class AuthRoutes {
             if (autenticatedUser && !rememberMe) {
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
                 
                 res.cookie(
-                'token', token, {
+                'accessToken', token, {
                     httpOnly: true,
                     sameSite: 'strict',
-                    maxAge: 24 * 60 * 20 * 1000
+                    maxAge: 15 * 60 * 1000
                 })
 
 
@@ -73,22 +73,22 @@ export class AuthRoutes {
                 const longSessionToken = `${selector}:${validator}`
 
                 res.cookie(
-                    'session', longSessionToken, {
+                    'sessionToken', longSessionToken, {
                         httpOnly: true,
                         sameSite: 'strict',
-                        maxAge: 30 * 24 * 60 * 60 * 1000
+                        maxAge: 7 * 24 * 60 * 60 * 1000
                     }
                 )
 
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '24h' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
 
                 res.cookie(
-                    'token', token, {
+                    'accessToken', token, {
                         httpOnly: true,
                         sameSite: 'strict',
-                        maxAge: 24 * 60 * 60 * 1000
+                        maxAge: 15 * 60 * 1000
                     })
                 return res.status(200).json({message: "hola " + username})
                 
@@ -213,5 +213,23 @@ export class AuthRoutes {
                 res.status(500).json({message: "Internal problem"})
             }
         }
+    
+    static async dev(req, res) {
+        try {
+        const longSessionToken = req.cookies.sessionToken
+        const selector = longSessionToken.split(':')[0]
+        const validator = longSessionToken.split(':')[1]
+
+        const {newValidator} = await SessionModel.refreshSession(selector, validator)
+
+        return res.status(200).json({
+                                    validator1:validator, 
+                                    NEWValidator: newValidator,
+                                    })
+    } catch (error) {
+        console.log(error)
+        throw error
+        }
+    }
 }
 
