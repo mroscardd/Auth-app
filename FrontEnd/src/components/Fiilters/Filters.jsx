@@ -1,35 +1,53 @@
 import './Filters.css'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 const env = import.meta.env
 
 
 
 export function Filters({totalUsers}) {
+    const timeoutRef = useRef(null);
     const [role, setRole] = useState('')
     const [input, setInput] = useState('')
     const [searchParams, setSearchParams] = useSearchParams()
 
     const handleRoleChange = (e) => {
-        if(e.target.value === ''){
-            setRole(e.target.value)
-            setSearchParams({})
-        } else {
-            setRole(e.target.value)
-            setSearchParams({role: e.target.value})
-        }
+
+        setRole(e.target.value)
+        setSearchParams(prev => {
+
+            const params = new URLSearchParams(prev)
+
+            if (e.target.value === "") {
+                params.delete('role')
+                return params
+            }
+
+            params.set('role', e.target.value)
+            return params
+        })
     }  
 
     const handleInputChange = (e) => {
-        if(e.target.value === ''){
-            setInput(e.target.value)
-            setSearchParams({})
-        } else {
-            setInput(e.target.value)
-            setTimeout(() => {
-            setSearchParams({search: e.target.value})
-            }, 1000)
-        }
+     
+        setInput(e.target.value);
+
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(() => {
+            setSearchParams(prev => {
+
+            const params = new URLSearchParams(prev)
+
+            if (e.target.value === "") {
+                params.delete('search')
+                return params
+            }
+
+            params.set('search', e.target.value)
+            return params
+        })
+        }, 1000);
+
     } 
 
     return (

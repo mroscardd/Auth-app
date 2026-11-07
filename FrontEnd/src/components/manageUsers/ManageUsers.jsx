@@ -58,28 +58,28 @@ export function ManageUsers() {
                 })
             .then(response => {
                 if (response.status == 204) {
-                    setAlertMessage('Usuario borrado')
+                    alert('Usuario borrado')
                     setToggleRendering(prev => !prev)
-                    setTimeout(() => {
-                        setAlertMessage('');
-                     }, 3000);
+                    
                 } else if (response.status == 404) {
-                    setAlertMessage('Este usuario no existe en la base de datos')
-                    setTimeout(() => {
-                        setAlertMessage('');
-                     }, 3000);
+                    alert('Este usuario no existe en la base de datos')
+                    
                 } else {
-                    setAlertMessage('Problema interno')
-                    setTimeout(() => {
-                        setAlertMessage('');
-                     }, 3000);
+                    alert('Problema interno')
+                    
                 }
-            
          })   
         .catch(error => {
             console.log(error)
-            setAlertMessage("Ha habido un problema al enviar la solicitud")
+            alert("Ha habido un problema al enviar la solicitud")
     }) 
+    }
+
+    const alert = (message) => {
+        setAlertMessage(message)
+        setTimeout(() => {
+            setAlertMessage('');
+            }, 3000);
     }
 
     const handleEdit = (e, userId) => {
