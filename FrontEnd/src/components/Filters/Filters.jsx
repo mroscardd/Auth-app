@@ -1,7 +1,6 @@
 import './Filters.css'
 import { useState, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-const env = import.meta.env
 
 
 
@@ -19,11 +18,14 @@ export function Filters({totalUsers}) {
             const params = new URLSearchParams(prev)
 
             if (e.target.value === "") {
+                setRole('')
                 params.delete('role')
+                params.delete('page')
                 return params
             }
-
+            setRole(e.target.value)
             params.set('role', e.target.value)
+            params.delete('page')
             return params
         })
     }  
@@ -40,10 +42,12 @@ export function Filters({totalUsers}) {
 
             if (e.target.value === "") {
                 params.delete('search')
+                params.delete('page')
                 return params
             }
-
+            setInput(e.target.value)
             params.set('search', e.target.value)
+            params.delete('page')
             return params
         })
         }, 1000);
@@ -54,7 +58,7 @@ export function Filters({totalUsers}) {
         <div className="filtersContainer">
             <div className="searchBox">
                 <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                     <g id="SVGRepo_iconCarrier"> 
                     <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#777777" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> 
@@ -69,7 +73,7 @@ export function Filters({totalUsers}) {
             </div>
             <div className="select-total">
                 <div className="selectContainer">
-                    <select id="role-select" value={role} onChange={(e) => handleRoleChange(e)}>
+                    <select id="role-select" value={role} onChange={handleRoleChange}>
                         <option value={''}>Select role</option>
                         <option value="user">User</option>
                         <option value="admin">Admin</option>

@@ -82,20 +82,20 @@ export const autenticate = async(req, res, next) => {
             'sessionToken', stringSessionToken, {
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: 7 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000
             }
         )
         
         const email = user.email
         const role = user.role
         const username = user.username
-        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
         
         res.cookie(
             'accessToken', newAccesstoken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000
+                maxAge: 1 * 60 * 10000
             })
         req.user = payload
 

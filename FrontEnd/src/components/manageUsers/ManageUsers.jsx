@@ -5,7 +5,7 @@ import { EditUser } from "../editUser/EditUser"
 import { UseAppContext } from '../../context/AuthContext'
 import { Alert } from '../alert/Alert'
 import { Pagination } from "../pagination/Pagination"
-import { Filters } from "../Fiilters/Filters"
+import { Filters } from "../Filters/Filters"
 
 const env = import.meta.env
 

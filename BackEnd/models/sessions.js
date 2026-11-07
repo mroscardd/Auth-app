@@ -74,7 +74,8 @@ export class SessionModel {
 
         if (!result) {
             throw new Error("Session already rotated or invalid")
-        }   
+        }  
+        
         return {
             selector,
             newValidator: validator_nocrypt
