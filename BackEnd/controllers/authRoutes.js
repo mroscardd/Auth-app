@@ -214,22 +214,5 @@ export class AuthRoutes {
             }
         }
     
-    static async dev(req, res) {
-        try {
-        const longSessionToken = req.cookies.sessionToken
-        const selector = longSessionToken.split(':')[0]
-        const validator = longSessionToken.split(':')[1]
-
-        const {newValidator} = await SessionModel.refreshSession(selector, validator)
-
-        return res.status(200).json({
-                                    validator1:validator, 
-                                    NEWValidator: newValidator,
-                                    })
-    } catch (error) {
-        console.log(error)
-        throw error
-        }
-    }
 }
 
