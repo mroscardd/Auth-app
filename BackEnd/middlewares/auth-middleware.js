@@ -89,13 +89,13 @@ export const autenticate = async(req, res, next) => {
         const email = user.email
         const role = user.role
         const username = user.username
-        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
+        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
         
         res.cookie(
             'accessToken', newAccesstoken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                maxAge: 1 * 60 * 10000
+                maxAge: 15 * 60 * 10000
             })
         req.user = payload
 

@@ -52,13 +52,13 @@ export class AuthRoutes {
             if (autenticatedUser && !rememberMe) {
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
                 
                 res.cookie(
                 'accessToken', token, {
                     httpOnly: true,
                     sameSite: 'strict',
-                    maxAge: 1 * 60 * 1000
+                    maxAge: 15 * 60 * 10000
                 })
 
 
@@ -82,13 +82,13 @@ export class AuthRoutes {
 
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
 
                 res.cookie(
                     'accessToken', token, {
                         httpOnly: true,
                         sameSite: 'strict',
-                        maxAge: 1 * 60 * 1000
+                        maxAge: 15 * 60 * 10000
                     })
                 return res.status(200).json({message: "hola " + username})
                 
