@@ -26,8 +26,8 @@ export class SessionModel {
         const expiresAt = new Date(Date.now() + sieteDias)
 
         await collection.findOneAndUpdate(
-            { user_id },
-            { $set: {selector, validator, expiresAt} },
+            { selector },
+            { $set: {user_id, selector, validator, expiresAt} },
             { upsert: true })
 
         return {

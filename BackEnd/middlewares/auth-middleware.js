@@ -77,7 +77,7 @@ export const autenticate = async(req, res, next) => {
         const {newValidator} = await SessionModel.refreshSession(selector, validator)
 
         const stringSessionToken = `${selector}:${newValidator}`
-
+        console.log(user.username, ":", stringSessionToken)
         res.cookie(
             'sessionToken', stringSessionToken, {
             httpOnly: true,
@@ -89,13 +89,13 @@ export const autenticate = async(req, res, next) => {
         const email = user.email
         const role = user.role
         const username = user.username
-        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+        const newAccesstoken = jwt.sign({id: user._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
         
         res.cookie(
             'accessToken', newAccesstoken, {
                 httpOnly: true,
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 10000
+                maxAge: 1 * 60 * 1000
             })
         req.user = payload
 

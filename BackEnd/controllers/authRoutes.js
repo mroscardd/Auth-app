@@ -52,13 +52,13 @@ export class AuthRoutes {
             if (autenticatedUser && !rememberMe) {
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
                 
                 res.cookie(
                 'accessToken', token, {
                     httpOnly: true,
                     sameSite: 'strict',
-                    maxAge: 15 * 60 * 10000
+                    maxAge: 1 * 60 * 1000
                 })
 
 
@@ -82,13 +82,13 @@ export class AuthRoutes {
 
                 const email = autenticatedUser.email
                 const role = autenticatedUser.role
-                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
 
                 res.cookie(
                     'accessToken', token, {
                         httpOnly: true,
                         sameSite: 'strict',
-                        maxAge: 15 * 60 * 10000
+                        maxAge: 1 * 60 * 1000
                     })
                 return res.status(200).json({message: "hola " + username})
                 
@@ -106,20 +106,20 @@ export class AuthRoutes {
 
     static async logout(req, res) {
         try{
-            const token = req.cookies.token
-            const longSessionToken = req.cookies.session
+            const token = req.cookies.accessToken
+            const longSessionToken = req.cookies.sessionToken
 
             if (longSessionToken) {
                 const selector = longSessionToken.split(':')[0]
                 await SessionModel.deleteUserSession(selector)
             }
            
-            res.clearCookie('token', {
+            res.clearCookie('accessToken', {
                 httpOnly: true,
                 sameSite: 'strict'
             })
 
-            res.clearCookie('session', {
+            res.clearCookie('sessionToken', {
                 httpOnly: true,
                 sameSite: 'strict'
             })
