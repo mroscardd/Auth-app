@@ -3,7 +3,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { connectDB } from './config/database.js'
 import { authRouter } from './routes/authRoutes.js'
-
+import { accessRouter } from './routes/accessRoutes.js'
 
 
 const app = express()
@@ -22,7 +22,7 @@ app.use(cors({
 
 
 app.use('/api', authRouter)
-
+app.use('/', accessRouter)
 
 app.get('/health', (req, res) => {
     return res.status(200).json({status:"ok", sesion: process.uptime()})

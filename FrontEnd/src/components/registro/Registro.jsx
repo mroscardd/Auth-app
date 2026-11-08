@@ -5,7 +5,7 @@ import { UseAppContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { Alert } from '../alert/Alert'
 
-const url = `${env.VITE_API}/api/register`
+const url = `${env.VITE_API}/register`
 
 
 

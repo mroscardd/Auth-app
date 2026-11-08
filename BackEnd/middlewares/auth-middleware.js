@@ -73,11 +73,9 @@ export const autenticate = async(req, res, next) => {
             role: user.role
         }
         
-
         const {newValidator} = await SessionModel.refreshSession(selector, validator)
-
         const stringSessionToken = `${selector}:${newValidator}`
-        console.log(user.username, ":", stringSessionToken)
+
         res.cookie(
             'sessionToken', stringSessionToken, {
             httpOnly: true,

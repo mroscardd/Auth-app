@@ -8,9 +8,7 @@ export const authRouter = express.Router()
             /api
 ===========================*/
 
-authRouter.post('/register', AuthRoutes.register)
-authRouter.post('/login', AuthRoutes.login)
-authRouter.get('/logout', autenticate, AuthRoutes.logout)
+
 authRouter.get('/me', autenticate, AuthRoutes.me)
 authRouter.get('/users', autenticate, admin, AuthRoutes.getUsers)
 authRouter.put('/users/:id', autenticate, admin, AuthRoutes.updateRole)
