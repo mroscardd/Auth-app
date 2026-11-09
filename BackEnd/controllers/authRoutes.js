@@ -1,6 +1,4 @@
-import jwt from 'jsonwebtoken'
 import { UserModel } from '../models/users.js'
-import { SessionModel } from '../models/sessions.js'
 
 const jwtSecret = process.env.JWTSECRET
 
