@@ -5,12 +5,11 @@ import { SessionModel } from '../models/sessions.js'
 const jwtSecret = process.env.JWTSECRET
 
 
-export class AccessRoutes {
+export class AccessController {
 
     static async register(req, res) {
         const { username, password, email } = req.body
         try {
-    
             const { id, username, email, role } = await UserModel.createUser(req.body)
 
             const token = jwt.sign({id, username, email, role}, jwtSecret, { expiresIn: '15min' })

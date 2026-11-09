@@ -2,9 +2,7 @@ import { UserModel } from '../models/users.js'
 
 const jwtSecret = process.env.JWTSECRET
 
-
-export class AuthRoutes {
-
+export class AuthController {
 
     static async me(req, res) {
         res.status(200).json({user: req.user})

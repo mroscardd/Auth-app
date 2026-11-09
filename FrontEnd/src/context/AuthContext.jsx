@@ -29,7 +29,7 @@ export const AuthProvider = ({children}) => {
             }).catch(error => {console.log(error)})
 
     }
-
+    
     useEffect(()=>{
         login()
     }, [])

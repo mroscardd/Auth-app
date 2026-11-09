@@ -1,6 +1,6 @@
 import express from 'express'
 import { superadmin, admin, autenticate } from '../middlewares/auth-middleware.js'
-import { AuthRoutes } from '../controllers/authRoutes.js'
+import { AuthController } from '../controllers/authController.js'
 export const authRouter = express.Router()
 
 
@@ -9,9 +9,9 @@ export const authRouter = express.Router()
 ===========================*/
 
 
-authRouter.get('/me', autenticate, AuthRoutes.me)
-authRouter.get('/users', autenticate, admin, AuthRoutes.getUsers)
-authRouter.put('/users/:id', autenticate, admin, AuthRoutes.updateRole)
-authRouter.delete('/users/:id', autenticate, superadmin, AuthRoutes.deleteUser)
+authRouter.get('/me', autenticate, AuthController.me)
+authRouter.get('/users', autenticate, admin, AuthController.getUsers)
+authRouter.put('/users/:id', autenticate, admin, AuthController.updateRole)
+authRouter.delete('/users/:id', autenticate, superadmin, AuthController.deleteUser)
 
 

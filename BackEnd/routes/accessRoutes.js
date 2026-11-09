@@ -1,5 +1,5 @@
 import express from 'express'
-import { AccessRoutes } from '../controllers/accessRoutes.js'
+import { AccessController } from '../controllers/accessController.js'
 export const accessRouter = express.Router()
 
 
@@ -7,6 +7,6 @@ export const accessRouter = express.Router()
             /
 ===========================*/
 
-accessRouter.post('/register', AccessRoutes.register)
-accessRouter.post('/login', AccessRoutes.login)
-accessRouter.get('/logout', AccessRoutes.logout)
+accessRouter.post('/register', AccessController.register)
+accessRouter.post('/login', AccessController.login)
+accessRouter.get('/logout', AccessController.logout)
