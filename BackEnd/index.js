@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { connectDB } from './config/database.js'
-import { authRouter } from './routes/authRoutes.js'
+import { usersRouter } from './routes/usersRoutes.js'
 import { accessRouter } from './routes/accessRoutes.js'
 
 
@@ -21,7 +21,7 @@ app.use(cors({
     }))
 
 
-app.use('/api', authRouter)
+app.use('/api', usersRouter)
 app.use('/', accessRouter)
 
 app.get('/health', (req, res) => {

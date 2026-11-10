@@ -19,7 +19,7 @@ export class AuthController {
 
             const usersShown = dataUsers.users
             const totalUsers = dataUsers.totalUsers
-            const totalPages = Math.ceil(dataUsers.totalUsers/LIMIT)
+            const totalPages = Math.ceil(dataUsers.totalUsers / LIMIT)
 
             return res.status(200).json({
                 totalUsers,
