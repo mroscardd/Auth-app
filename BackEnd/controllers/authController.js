@@ -1,91 +1,131 @@
+import jwt from 'jsonwebtoken'
 import { UserModel } from '../models/users.js'
+import { SessionModel } from '../models/sessions.js'
 
 const jwtSecret = process.env.JWTSECRET
 
+
 export class AuthController {
 
-    static async me(req, res) {
-        res.status(200).json({user: req.user})
-    }
-
-    static async getUsers(req, res) {
-        const LIMIT = 10
-        const { page, search, role } = req.query
-        const user = req.user
-            
+    static async register(req, res) {
+        const { username, password, email } = req.body
         try {
+            const { id, username, email, role } = await UserModel.createUser(req.body)
+
+            const token = jwt.sign({id, username, email, role}, jwtSecret, { expiresIn: '15min' })
+
+            res.cookie(
+                'accessToken', token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 15 * 60 * 1000
+                })
             
-            const dataUsers = await UserModel.getAllUser({ page, LIMIT, user, search, role })
-
-            const usersShown = dataUsers.users
-            const totalUsers = dataUsers.totalUsers
-            const totalPages = Math.ceil(dataUsers.totalUsers / LIMIT)
-
-            return res.status(200).json({
-                totalUsers,
-                totalPages,
-                usersShown
-            })
+            res.status(201).json({message: "Registro exitoso!"})
+        
+        
         } catch (error) {
             console.error(error)
-            return res.status(500).json({message: "error"})
+
+            if (error.message === 'USERNAME_TAKEN'){
+                return res.status(409).json({message: "El usuario ya existe"})
+            } 
+            if (error.message === 'EMAIL_TAKEN') {
+                return res.status(409).json({message: "El email ya existe"})
+            } 
+            if (error.message === "DATABASE_ERROR") {
+                return res.status(500).json({message: "Problema interno de la base de datos"})
+            }
+            return res.status(500).json({ message: "Problema interno"});
         }
+        
     }
 
-    static async updateRole(req, res) {
-        const user_role = req.user.role
-        const user_id = req.user._id
-        const id = req.params.id
+    static async login(req, res) {
+        const { username, rememberMe } = req.body
         try{
-            
-            if (id === user_id) {
-                return res.status(409).json({ message: "No puedes modificar tus permisos" })
-            }
-
-            const user = await UserModel.getUserById(id)
-
         
-            if (!user) {
-                return res.status(404).json({message:"UserId dont exist"})
-            }
-            if (user_role !== "superadmin" && user.role === "admin") {
-                return res.status(403).json({message:"You cant modify admin users"})
-            }
+            const autenticatedUser = await UserModel.findAutenticatedUser(req.body)
+        
+            if (autenticatedUser && !rememberMe) {
+                const email = autenticatedUser.email
+                const role = autenticatedUser.role
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
+                
+                res.cookie(
+                'accessToken', token, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    maxAge: 1 * 60 * 1000
+                })
 
-            if (user.role === "superadmin") {
-                return res.status(409).json({message:"You cant modify superadmin"})
-            }
 
-            const userUpdated = await UserModel.updateUser({role: req.body.role}, id)
+                return res.status(200).json({message: "hola " + username})
     
-            res.status(200).json({message: "Updated successfully", userUpdated})
-        
-            } catch (error) {
-                console.error(error)
-                if (error.message === "NO_VALID_ID") {
-                    return res.status(400).json({ message: "UserId dont exist" })
-                }
-                res.status(500).json({message: "Internal problem"})
+            } else if  (autenticatedUser && rememberMe) {
+                const user_id = autenticatedUser._id
+                const token_value = await SessionModel.createSession(user_id)
+                const selector = token_value.selector
+                const validator = token_value.validator
+
+                const longSessionToken = `${selector}:${validator}`
+
+                res.cookie(
+                    'sessionToken', longSessionToken, {
+                        httpOnly: true,
+                        sameSite: 'strict',
+                        maxAge: 7 * 24 * 60 * 60 * 1000
+                    }
+                )
+
+                const email = autenticatedUser.email
+                const role = autenticatedUser.role
+                const token = jwt.sign({id: autenticatedUser._id, username, email, role}, jwtSecret, { expiresIn: '1min' })
+
+                res.cookie(
+                    'accessToken', token, {
+                        httpOnly: true,
+                        sameSite: 'strict',
+                        maxAge: 1 * 60 * 1000
+                    })
+                return res.status(200).json({message: "hola " + username})
+                
+            } else {
+            
+                return res.status(401).json({message: "Credential are not correct"})
             }
+
+        } catch (error) {
+        
+            console.error(error)
+            return res.status(500).json({message:"internal error"})
+        }   
     }
 
-     static async deleteUser(req, res){
-            try{
-                const { id } = req.params
-                const deleteUser = await UserModel.deleteUserById(id)
-                if (deleteUser.deletedCount != 0) {
-                    console.log(deleteUser.deletedCount)
-                    return res.status(204).send()
-                } 
-                return res.status(404).json({message: "Not user in db found"})
-            } catch(error){
-                console.error(error)
-                if (error.message === "NO_VALID_ID") {
-                    return res.status(400).json({ message: "UserId dont exist" })
-                }
-                res.status(500).json({message: "Internal problem"})
-            }
-        }
-    
-}
+    static async logout(req, res) {
+        try{
+            const token = req.cookies.accessToken
+            const longSessionToken = req.cookies.sessionToken
 
+            if (longSessionToken) {
+                const selector = longSessionToken.split(':')[0]
+                await SessionModel.deleteUserSession(selector)
+            }
+            
+            res.clearCookie('accessToken', {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+
+            res.clearCookie('sessionToken', {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+
+            return res.status(200).json({message: "You are logout"})
+        } catch (error) {
+            console.error(error)
+            return res.status(500).json({message: "Internal error"})
+        }
+    }
+}

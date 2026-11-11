@@ -3,7 +3,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { connectDB } from './config/database.js'
 import { usersRouter } from './routes/usersRoutes.js'
-import { accessRouter } from './routes/accessRoutes.js'
+import { accessRouter } from './routes/authRoutes.js'
 
 
 const app = express()
