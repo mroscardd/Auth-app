@@ -1,12 +1,12 @@
 import express from 'express'
 import { AuthController } from '../controllers/authController.js'
-export const accessRouter = express.Router()
+export const authRouter = express.Router()
 
 
 /*==========================
             /
 ===========================*/
 
-accessRouter.post('/register', AuthController.register)
-accessRouter.post('/login', AuthController.login)
-accessRouter.post('/logout', AuthController.logout)
+authRouter.post('/register', AuthController.register)
+authRouter.post('/login', AuthController.login)
+authRouter.post('/logout', AuthController.logout)

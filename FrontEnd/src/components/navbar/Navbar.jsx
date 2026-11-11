@@ -10,7 +10,7 @@ export function Navbar() {
 
     const handleClick = () => {
         fetch(url, {
-                    method: 'GET',
+                    method: 'POST',
                     credentials: 'include' 
                 })
         .then(response => {  
