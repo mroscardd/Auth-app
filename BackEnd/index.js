@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import { connectDB } from './config/database.js'
 import { usersRouter } from './routes/usersRoutes.js'
 import { authRouter } from './routes/authRoutes.js'
+import { xssProtection } from './middlewares/xssMiddleware.js'
 
 
 const app = express()
@@ -19,6 +20,8 @@ app.use(cors({
     ],
     credentials: true,
     }))
+    
+app.use(xssProtection)    
 
 
 app.use('/api', usersRouter)

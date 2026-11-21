@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/mroscardd/Auth-app/issues"
   },
-  "homepage": "https://github.com/mroscardd/Auth-app#readme"
+  "homepage": "https://github.com/mroscardd/Auth-app#readme",
+  "dependencies": {
+    "xss": "^1.0.17"
+  }
 }
