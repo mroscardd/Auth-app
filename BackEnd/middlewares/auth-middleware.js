@@ -124,6 +124,7 @@ export const admin = (req, res,next) => {
 
 }
 
+
 export const superadmin = (req, res,next) => {
     const userInfo = req.user
     if (!userInfo || userInfo.role !== 'superadmin') {

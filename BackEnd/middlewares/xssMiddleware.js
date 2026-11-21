@@ -19,13 +19,18 @@ export function xssProtection(req, res, next) {
     next()
 }
   
+const EXCLUDED_FIELDS = ['password']
 
-function sanitize(data) {
+function sanitize(data, currentKey='') {
 
     const xssConfig = {
         whiteList: {}, 
         stripIgnoreTag: true,
-        stripIgnoreTagBody: ['script']
+        stripIgnoreTagBody: ['script', 'style']
+    }
+
+    if(EXCLUDED_FIELDS.includes(currentKey)){
+        return data
     }
 
     if (typeof data === 'string') {
@@ -33,12 +38,12 @@ function sanitize(data) {
     }
 
     if (Array.isArray(data)) {
-        return data.map(e => sanitize(e))
+        return data.map(e => sanitize(e, currentKey))
     }
 
     if (data !== null && typeof data === 'object') {
         return Object.keys(data).reduce((e, key) => {
-            e[key] = sanitize(data[key])
+            e[key] = sanitize(data[key], key)
             return e
         }, {})
     }
